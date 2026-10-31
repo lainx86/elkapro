@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#030916" />
+    <meta name="description" content="Arus menjadi logika. Sebuah perjalanan visual divisi Elektrik & Program, Aterkia Diponegoro Team." />
+    <meta property="og:title" content="ELKAPRO — Arus Menjadi Logika" />
+    <meta property="og:description" content="Merangkai arus. Menulis kemungkinan. Sebuah instalasi interaktif dari Aterkia." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://elkapro-arus-aterkia.entahlah2390.chatgpt.site" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>ELKAPRO — Arus Menjadi Logika</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#journey">Masuk ke perjalanan</a>
+    <header class="masthead">
+      <a class="identity" href="#" aria-label="Aterkia — kembali ke awal">
+        <img src="/aterkia.png" width="30" height="40" alt="Logo Aterkia" />
+        <span>ATERKIA<span class="identity-sub">DIPONEGORO TEAM</span></span>
+      </a>
+      <span class="division-label">DIVISI ELEKTRIK<br />& PROGRAM</span>
+      <button class="motion-toggle" type="button" aria-pressed="false" title="Kurangi gerakan kamera dan efek animasi">
+        <span class="motion-indicator" aria-hidden="true"></span>
+        <span>Gerak minim</span>
+      </button>
+    </header>
+
+    <main id="journey" class="journey" tabindex="-1" aria-label="Perjalanan ELKAPRO">
+      <div class="stage">
+        <div class="stage-haze" aria-hidden="true"></div>
+        <div class="stage-grid" aria-hidden="true"></div>
+        <canvas id="world" aria-hidden="true"></canvas>
+        <svg class="fallback-art" viewBox="0 0 1000 1000" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="metal" x1="250" y1="200" x2="650" y2="850" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#F3F7FF"/><stop offset=".25" stop-color="#637C9B"/><stop offset=".45" stop-color="#F3F7FF"/><stop offset=".6" stop-color="#0050B8"/><stop offset="1" stop-color="#78C8FF"/>
+            </linearGradient>
+            <radialGradient id="halo"><stop stop-color="#0050B8" stop-opacity=".55"/><stop offset="1" stop-color="#0050B8" stop-opacity="0"/></radialGradient>
+          </defs>
+          <circle cx="500" cy="500" r="480" fill="url(#halo)"/>
+          <g stroke="#78C8FF" stroke-opacity=".35">
+            <path d="M70 640H230L340 530H600L760 370H940M70 680H250L360 570H620L780 410H940M150 220H300L430 350H650L820 180M110 820H300L480 640H790L900 750"/>
+            <circle cx="500" cy="500" r="280"/><ellipse cx="500" cy="500" rx="410" ry="210" transform="rotate(-30 500 500)"/>
+          </g>
+          <path d="M558 110 295 535H457L393 890 705 420H535L620 110Z" fill="url(#metal)" stroke="#D9E7F8" stroke-width="3"/>
+        </svg>
+        <div class="vignette" aria-hidden="true"></div>
+
+        <div class="intro-title" data-copy="intro">
+          <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span> ATERKIA / ELECTRICAL & PROGRAMMING</p>
+          <h1 id="journey-title" tabindex="-1">ELKAPRO<span class="title-period">.</span></h1>
+          <div class="intro-baseline"><span>ARUS MENJADI LOGIKA</span><span class="edition">[ A FIELD OF POSSIBILITIES ]</span></div>
+        </div>
+
+        <div class="narrative narrative-power" data-copy="power">
+          <p class="eyebrow">01 / POWER → SIGNAL</p>
+          <h2>Mengalir.<br /><span>Terhubung.</span></h2>
+          <p class="small-copy">Dari satu percikan,<br />segala kemungkinan terhubung.</p>
+        </div>
+
+        <div class="narrative narrative-logic" data-copy="logic">
+          <p class="eyebrow">02 / SIGNAL → LOGIC</p>
+          <h2>Logika yang<br /><span>menggerakkan.</span></h2>
+          <p class="small-copy">Merangkai arus. Menulis kemungkinan.</p>
+        </div>
+
+        <div class="code-stream" aria-hidden="true" data-copy="code">
+          <span>const possibility = true;</span>
+          <span>while (curiosity) {</span>
+          <span>&nbsp; sense(); connect(); create();</span>
+          <span>}</span>
+        </div>
+
+        <div class="outro" data-copy="outro">
+          <p class="eyebrow">ELECTRICAL × PROGRAMMING</p>
+          <h2>Arus menjadi<br /><span>logika.</span></h2>
+          <div class="outro-lockup">
+            <img src="/aterkia.png" alt="Aterkia Diponegoro Team" width="50" height="67" />
+            <p>ELKAPRO<span>Divisi Elektrik & Program<br />Aterkia Diponegoro Team</span></p>
+          </div>
+          <button class="replay" type="button">Ulangi perjalanan <span aria-hidden="true">↗</span></button>
+        </div>
+
+        <div class="object-caption" aria-hidden="true"><span class="caption-cross">+</span><span id="object-label">ENERGY IN ITS RAWEST FORM</span></div>
+        <div class="coordinate" aria-hidden="true">PWR <span id="power-value">000</span><br />SIG <span id="signal-value">000</span><br />SYS <span class="system-status">CONNECTED</span></div>
+
+        <footer class="hud">
+          <span class="hud-label">ELECTRICITY IS OUR MEDIUM.<br /><span>CODE IS OUR LANGUAGE.</span></span>
+          <span class="scroll-cue">GULIR UNTUK MENGALIR <span aria-hidden="true">↓</span></span>
+          <div class="progress" aria-label="Progres perjalanan" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <span class="progress-number">000</span><span class="progress-track"><span></span></span><span class="progress-total">100</span>
+          </div>
+        </footer>
+      </div>
+    </main>
+    <noscript><div class="noscript-message">ELKAPRO — Arus menjadi logika. Divisi Elektrik & Program Aterkia Diponegoro Team. Aktifkan JavaScript untuk menelusuri instalasi interaktif.</div></noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
