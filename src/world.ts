@@ -3,6 +3,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { journeyState, smoothRange } from './journey';
 import { createContinuation } from './continuation';
+import { createCircuitGlow } from './circuit-glow';
 
 const BLUE = 0x0050b8;
 const ICE = 0x78c8ff;
@@ -127,19 +128,22 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
       const path = new THREE.CurvePath<THREE.Vector3>();
       for (let j = 0; j < points.length - 1; j++) path.add(new THREE.LineCurve3(points[j], points[j + 1]));
       routes.push(path);
-      traceGeometry.push(new THREE.TubeGeometry(path, 10, .009, 4, false));
+      traceGeometry.push(new THREE.TubeGeometry(path, 48, .011, 6, false));
       const pad = new THREE.RingGeometry(.025, .045, 10);
       pad.translate(points[3].x, points[3].y, -.24);
       contactGeometry.push(pad);
     }
   }
   const mergedTraces = mergeGeometries(traceGeometry)!;
-  const traceMaterial = new THREE.MeshBasicMaterial({ color: 0x387bad, transparent: true, opacity: .7 });
+  const traceMaterial = new THREE.MeshBasicMaterial({ color: 0x54aaff, transparent: true, opacity: .85, toneMapped: false, fog: false });
   circuit.add(new THREE.Mesh(mergedTraces, traceMaterial));
   circuit.add(new THREE.Mesh(mergeGeometries(contactGeometry)!, lightMaterial));
   traceGeometry.forEach(g => g.dispose());
   contactGeometry.forEach(g => g.dispose());
-  const pulses = new THREE.InstancedMesh(new THREE.SphereGeometry(.025, 6, 4), lightMaterial, routes.length);
+  const pulseMaterial = new THREE.MeshBasicMaterial({ color: 0xf3fbff, toneMapped: false, fog: false });
+  const pulses = new THREE.InstancedMesh(new THREE.SphereGeometry(.032, 10, 6), pulseMaterial, routes.length);
+  const circuitGlow = createCircuitGlow(routes);
+  circuit.add(circuitGlow.traces, circuitGlow.pulses);
   circuit.add(pulses);
   root.add(circuit);
 
@@ -260,6 +264,7 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     });
     pulses.instanceMatrix.needsUpdate = true;
     pulses.computeBoundingSphere();
+    circuitGlow.update(traceMaterial.opacity, pulses);
 
     const array = particlesGeometry.attributes.position.array as Float32Array;
     const order = l * (1 - dissolve);

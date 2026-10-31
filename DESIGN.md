@@ -48,4 +48,10 @@ Reduced motion follows the OS setting until explicitly overridden with the “Ge
 
 The signal field uses 72 fine paths with vertex-color gradients, 20 luminous cores, and instanced travelling pulses. Cores have matching source/target tube topology, allowing both positions and normals to morph while the material changes from luminous blue-white to metal. The strands share a batched geometry; portrait framing rotates the field diagonally and then aligns it with the tunnel. No geometry is regenerated per frame.
 
+## Circuit illumination
+
+Circuit traces have sharp blue emissive-looking cores with wide, soft additive halos. The moving signals use larger white-blue cores and stronger radial halos so their brightness and silhouette remain distinct from the stationary traces. The pulse halos copy the core instance transforms each frame and face the camera in the vertex shader. They remain still in reduced-motion mode along with the original signal cores.
+
+The glow is local geometry with Gaussian opacity profiles, adding two draw calls and no full-screen post-processing. Canvas transparency, HTML typography, the metal sculpture, and the later installations retain their existing rendering. Halo geometry follows the exact circuit bends, and its intensity follows the circuit's existing choreography.
+
 No generated images, third-party media requests, audio, analytics, backend, or telemetry. Repeated geometry uses instancing or merged buffers; pixel ratio and mobile particle counts are capped. Rendering pauses while the document is hidden.
