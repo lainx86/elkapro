@@ -221,7 +221,8 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     const r = minimal ? 0 : s.resolve;
     const dissolve = smoothRange(.7, .9, progress);
 
-    root.position.set(portrait ? .3 * (1 - s.outro) : 1.2 * (1 - s.circuit) + 2 * s.resolve - .5 * s.logic, portrait ? -1.35 : -.15, 0);
+    const rootX = minimal ? (portrait ? .3 : 1.2) : portrait ? .3 * (1 - s.outro) : 1.2 * (1 - s.circuit) + 2 * s.resolve - .5 * s.logic;
+    root.position.set(rootX, portrait ? -1.35 : -.15, 0);
     root.rotation.set(.08 + c * .2, -.35 + c * .7 - l * .6 + r * .4, -.15 + c * .2);
     if (!minimal) {
       root.rotation.y += pointerX * .035 + Math.sin(animated * .24) * .025;
@@ -246,7 +247,7 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     diamondLines.forEach((diamond, i) => { diamond.rotation.z = (1 - r) * i * .12 + Math.sin(animated * .15 + i * .3) * .012 * (1 - r); });
 
     routes.forEach((path, i) => {
-      const t = ((progress * 3.5 + animated * .1 + i / routes.length) % 1 + 1) % 1;
+      const t = minimal ? i / routes.length : ((progress * 3.5 + animated * .1 + i / routes.length) % 1 + 1) % 1;
       dummy.position.copy(path.getPoint(t));
       dummy.scale.setScalar(.6 + c * .7);
       dummy.rotation.set(0, 0, 0);
