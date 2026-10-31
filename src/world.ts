@@ -3,7 +3,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { journeyState, smoothRange } from './journey';
 import { createContinuation } from './continuation';
-import { createCircuitGlow } from './circuit-glow';
+import { createCircuitBloom } from './circuit-bloom';
 
 const BLUE = 0x0050b8;
 const ICE = 0x78c8ff;
@@ -135,17 +135,17 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     }
   }
   const mergedTraces = mergeGeometries(traceGeometry)!;
-  const traceMaterial = new THREE.MeshBasicMaterial({ color: 0x54aaff, transparent: true, opacity: .85, toneMapped: false, fog: false });
-  circuit.add(new THREE.Mesh(mergedTraces, traceMaterial));
+  const traceMaterial = new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(.7, 2.2, 4), transparent: true, opacity: .85, fog: false });
+  const traces = new THREE.Mesh(mergedTraces, traceMaterial);
+  circuit.add(traces);
   circuit.add(new THREE.Mesh(mergeGeometries(contactGeometry)!, lightMaterial));
   traceGeometry.forEach(g => g.dispose());
   contactGeometry.forEach(g => g.dispose());
-  const pulseMaterial = new THREE.MeshBasicMaterial({ color: 0xf3fbff, toneMapped: false, fog: false });
-  const pulses = new THREE.InstancedMesh(new THREE.SphereGeometry(.032, 10, 6), pulseMaterial, routes.length);
-  const circuitGlow = createCircuitGlow(routes);
-  circuit.add(circuitGlow.traces, circuitGlow.pulses);
+  const pulseMaterial = new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(9, 12, 16), fog: false });
+  const pulses = new THREE.InstancedMesh(new THREE.SphereGeometry(.022, 10, 6), pulseMaterial, routes.length);
   circuit.add(pulses);
   root.add(circuit);
+  const circuitBloom = createCircuitBloom(renderer, scene, camera, [traces, pulses]);
 
   const diamonds = new THREE.Group();
   const diamondMaterial = new THREE.LineBasicMaterial({ color: 0x63abef, transparent: true, opacity: .6 });
@@ -205,6 +205,7 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
   let pointerY = 0;
   let frame = 0;
   let contextLost = false;
+  let bloomAvailable = true;
 
   function resize() {
     const bounds = canvas.getBoundingClientRect();
@@ -213,6 +214,7 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     portrait = width / height < .85;
     renderer.setPixelRatio(Math.min(devicePixelRatio, width < 700 ? 1.5 : 1.75));
     renderer.setSize(width, height, false);
+    circuitBloom.resize(width, height, renderer.getPixelRatio());
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     render();
@@ -264,7 +266,6 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     });
     pulses.instanceMatrix.needsUpdate = true;
     pulses.computeBoundingSphere();
-    circuitGlow.update(traceMaterial.opacity, pulses);
 
     const array = particlesGeometry.attributes.position.array as Float32Array;
     const order = l * (1 - dissolve);
@@ -283,6 +284,10 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     camera.lookAt(cameraTarget);
     continuation.update(s, animated, portrait, minimal, camera, cameraTarget);
     renderer.render(scene, camera);
+    if (bloomAvailable) {
+      try { circuitBloom.render(c * (1 - r * .7) * (1 - s.departure)); }
+      catch (error) { bloomAvailable = false; console.warn('Circuit bloom unavailable; keeping the light sources visible.', error); }
+    }
   }
 
   function tick(now: number) {
@@ -315,6 +320,7 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
   }
   function onContextRestored() {
     contextLost = false;
+    bloomAvailable = true;
     document.documentElement.classList.remove('webgl-fallback');
     document.documentElement.classList.add('webgl-ready');
     schedule();
@@ -355,6 +361,7 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
       geometries.forEach(g => g.dispose());
       materials.forEach(m => m.dispose());
       environment.dispose();
+      circuitBloom.dispose();
       renderer.dispose();
     },
   };

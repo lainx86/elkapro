@@ -50,8 +50,8 @@ The signal field uses 72 fine paths with vertex-color gradients, 20 luminous cor
 
 ## Circuit illumination
 
-Circuit traces have sharp blue emissive-looking cores with wide, soft additive halos. The moving signals use larger white-blue cores and stronger radial halos so their brightness and silhouette remain distinct from the stationary traces. The pulse halos copy the core instance transforms each frame and face the camera in the vertex shader. They remain still in reduced-motion mode along with the original signal cores.
+Circuit traces and travelling pulses are HDR light sources. The pulses have smaller hot cores and roughly six times the trace luminance. Both are tone mapped in the main image, and visible emission feeds a selective UnrealBloomPass with five Gaussian blur scales. Brightness produces the optical spread; there are no halo ribbons, radial discs, or camera-facing particle planes.
 
-The glow is local geometry with Gaussian opacity profiles, adding two draw calls and no full-screen post-processing. Canvas transparency, HTML typography, the metal sculpture, and the later installations retain their existing rendering. Halo geometry follows the exact circuit bends, and its intensity follows the circuit's existing choreography.
+The sharp base image is drawn normally. A bounded-resolution half-float emission buffer renders the circuit lights with black surface occluders, so hidden lights do not shine through the chip. Only the blurred result is added over the base using an alpha-aware premultiplied composite. HTML typography and transparent canvas regions remain visible. Bloom is inactive outside the circuit choreography. Devices without half-float color support retain the tone-mapped sources; a failed optical pass restores rendering state and leaves the scene running.
 
 No generated images, third-party media requests, audio, analytics, backend, or telemetry. Repeated geometry uses instancing or merged buffers; pixel ratio and mobile particle counts are capped. Rendering pauses while the document is hidden.
