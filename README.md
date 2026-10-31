@@ -2,7 +2,7 @@
 
 A continuous-scroll 3D art website for Aterkia's Electrical & Programming division. Built with Vite, TypeScript, Three.js, and GSAP ScrollTrigger. All artwork is procedural geometry or SVG; the original supplied Aterkia logo is included unchanged.
 
-The extended journey continues beyond the original ending: a silver waveform ribbon, a tunnel of code braces, and a network constellation replace the lightning and chip. Scroll distance is doubled while preserving the pacing of the first half. Replay is available at the new ending.
+The extended journey continues beyond the original ending: a blue-white filament field, a tunnel of code braces, and a network constellation replace the lightning and chip. Scroll distance is doubled while preserving the pacing of the first half. Replay is available at the new ending.
 
 ## Run locally
 
@@ -27,14 +27,15 @@ npm run preview
 
 - `src/main.ts`: HTML presentation, the single scroll timeline, motion preferences, and controls.
 - `src/world.ts`: the Three.js installation, camera paths, adaptive rendering, and cleanup.
-- `src/continuation.ts`: waveform, code tunnel, network constellation, and the continuation camera path.
+- `src/continuation.ts`: filament field, code tunnel, network constellation, and the continuation camera path.
+- `src/filament-field.ts`: batched light strands and moving signal pulses.
 - `src/journey.ts`: the deterministic progress-to-scene mapping.
 - `src/style.css`: responsive layout, typography, focus states, and fallback art presentation.
 - `DESIGN.md`: visual decisions, narrative, and accessibility behavior.
 
 ## Browser acceptance checks
 
-Use a WebGL2-capable browser. Check start, 17%, 32%, the old endpoint at 50%, waveform at 60%, code tunnel at 76%, network at 90%, and the new ending at desktop, tablet, 390px portrait, and landscape. Scroll backward and quickly across transitions; reload midway; resize and rotate the viewport. Text must remain readable with no horizontal overflow, empty scene, or discontinuous camera reset. The original lightning and chip must disappear by 56%; the network must remain visible at the new ending. Test keyboard-only use, replay, reduced-motion system settings and the manual override. Disable WebGL to inspect each of the four SVG artworks. Background the tab to confirm rendering pauses.
+Use a WebGL2-capable browser. Check start, 17%, 32%, the old endpoint at 50%, filament field at 60%, code tunnel at 76%, network at 90%, and the new ending at desktop, tablet, 390px portrait, and landscape. Scroll backward and quickly across transitions; reload midway; resize and rotate the viewport. Text must remain readable with no horizontal overflow, empty scene, or discontinuous camera reset. The original lightning and chip must disappear by 56%; the network must remain visible at the new ending. Test keyboard-only use, replay, reduced-motion system settings and the manual override. Disable WebGL to inspect each of the four SVG artworks. Background the tab to confirm rendering pauses.
 
 The connected browser was unavailable during the initial implementation. TypeScript, production build, and timeline tests can run locally; visual device QA remains a separate check until browser access is available.
 

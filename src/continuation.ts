@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { journeyState, smoothRange } from './journey.ts';
+import { createFilamentField } from './filament-field.ts';
 
 type JourneyState = ReturnType<typeof journeyState>;
 
@@ -9,47 +10,9 @@ export function createContinuation(scene: THREE.Scene) {
   const blue = new THREE.MeshStandardMaterial({ color: 0x0050b8, metalness: .7, roughness: .2, emissive: 0x0050b8, emissiveIntensity: .5, transparent: true });
   const glow = new THREE.LineBasicMaterial({ color: 0x78c8ff, transparent: true, opacity: .6 });
 
-  const wave = new THREE.Group();
-  const ribbonPositions: number[] = [];
-  const ribbonIndices: number[] = [];
-  const waveform: THREE.Vector3[] = [];
-  const segments = 320;
-  for (let i = 0; i <= segments; i++) {
-    const x = (i / segments - .5) * 11;
-    const envelope = .5 + .5 * Math.cos(x * .35);
-    const y = Math.sin(x * 2.8) * 1.5 * envelope;
-    const z = Math.cos(x * .7) * .55;
-    waveform.push(new THREE.Vector3(x, y, z));
-    ribbonPositions.push(x, y, z - .24, x, y, z + .24);
-    if (i < segments) {
-      const a = i * 2;
-      ribbonIndices.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
-    }
-  }
-  const ribbonGeometry = new THREE.BufferGeometry();
-  ribbonGeometry.setAttribute('position', new THREE.Float32BufferAttribute(ribbonPositions, 3));
-  ribbonGeometry.setIndex(ribbonIndices);
-  ribbonGeometry.computeVertexNormals();
-  const ribbonMaterial = silver.clone();
-  ribbonMaterial.side = THREE.DoubleSide;
-  wave.add(new THREE.Mesh(ribbonGeometry, ribbonMaterial));
-  const waveGlow = glow.clone();
-  for (let i = 0; i < 7; i++) {
-    const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(waveform), waveGlow);
-    line.position.set(0, (i - 3) * .09, -.2 - i * .19);
-    wave.add(line);
-  }
-  const spectrumMaterial = blue.clone();
-  const bars = new THREE.InstancedMesh(new THREE.BoxGeometry(.045, 1, .055), spectrumMaterial, 72);
+  const field = createFilamentField();
+  const wave = field.group;
   const dummy = new THREE.Object3D();
-  for (let i = 0; i < 72; i++) {
-    const height = .12 + Math.abs(Math.sin(i * .48) * Math.cos(i * .19)) * 1.8;
-    dummy.position.set((i - 35.5) * .15, -2.6 + height / 2, -.2);
-    dummy.scale.set(1, height, 1);
-    dummy.updateMatrix();
-    bars.setMatrixAt(i, dummy.matrix);
-  }
-  wave.add(bars);
   scene.add(wave);
 
   // Physical curly braces become architectural gates, rather than another electronic component.
@@ -125,15 +88,12 @@ export function createContinuation(scene: THREE.Scene) {
   return {
     update(s: JourneyState, time: number, portrait: boolean, reduced: boolean, camera: THREE.PerspectiveCamera, originalTarget: THREE.Vector3) {
       const t = reduced ? 0 : time;
-      wave.visible = s.wave > .001;
+      field.update(s.wave, t, s.progress, reduced);
       tunnel.visible = s.tunnel > .001;
       network.visible = s.network > .001;
-      ribbonMaterial.opacity = s.wave;
-      waveGlow.opacity = s.wave * .5;
-      spectrumMaterial.opacity = s.wave * .85;
-      wave.position.set(portrait ? 0 : 1.5, portrait ? -1.7 : -.6, 0);
-      wave.rotation.set(reduced ? -.18 : -.18 + Math.sin(t * .16) * .08, reduced ? -.15 : -.15 + smoothRange(.53, .68, s.progress) * .35, -.15);
-      wave.scale.setScalar(portrait ? .72 : 1);
+      wave.position.set(portrait ? .15 : 1.3, portrait ? -1.8 : -.8, 0);
+      wave.rotation.set(reduced ? .15 : .15 + Math.sin(t * .12) * .04, reduced ? -.25 : -.25 + smoothRange(.53, .68, s.progress) * .4, portrait ? .6 : .18);
+      wave.scale.setScalar(portrait ? .65 : 1);
 
       gateSilver.opacity = s.tunnel;
       gateBlue.opacity = s.tunnel;

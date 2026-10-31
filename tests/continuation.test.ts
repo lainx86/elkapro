@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { createContinuation } from '../src/continuation.ts';
 import { journeyState } from '../src/journey.ts';
+import { createFilamentField } from '../src/filament-field.ts';
 
 test('each new installation has finite geometry inside the desktop and portrait camera', () => {
   Object.defineProperty(globalThis, 'matchMedia', { value: () => ({ matches: false }), configurable: true });
@@ -42,4 +43,17 @@ test('reduced motion keeps the continuation camera stationary', () => {
     continuation.update(journeyState(p), 0, true, true, camera, new THREE.Vector3());
     assert.deepEqual(camera.position.toArray(), initial.toArray());
   }
+});
+
+test('signal pulses move in full mode and remain fixed in reduced mode', () => {
+  const field = createFilamentField();
+  const pulses = field.group.children.find(object => object instanceof THREE.InstancedMesh) as THREE.InstancedMesh;
+  field.update(1, 10, .6, true);
+  const stationary = Array.from(pulses.instanceMatrix.array);
+  field.update(1, 200, .64, true);
+  assert.deepEqual(Array.from(pulses.instanceMatrix.array), stationary);
+  field.update(1, 10, .6, false);
+  assert.notDeepEqual(Array.from(pulses.instanceMatrix.array), stationary);
+  field.update(0, 10, .6, false);
+  assert.equal(field.group.visible, false);
 });
