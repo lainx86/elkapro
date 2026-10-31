@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { journeyState } from './journey';
 import { createWorld } from './world';
+import { createFallbackField } from './filament-field';
 
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
@@ -38,8 +39,9 @@ const outroSecond = element('.outro-second');
 const continueHint = element('.continue-hint');
 const fallbackOrigin = document.getElementById('fallback-origin')!;
 const fallbackWave = document.getElementById('fallback-wave')!;
-const fallbackTunnel = document.getElementById('fallback-tunnel')!;
 const fallbackNetwork = document.getElementById('fallback-network')!;
+const fallbackPath = document.getElementById('fallback-field-path')!;
+let fallbackField: ReturnType<typeof createFallbackField> | undefined;
 const preference = matchMedia('(prefers-reduced-motion: reduce)');
 const playhead = { progress: 0 };
 let reduced = preference.matches;
@@ -74,7 +76,11 @@ function update() {
   continueHint.hidden = s.progress > .8;
   fallbackOrigin.setAttribute('opacity', String(1 - s.departure));
   fallbackWave.setAttribute('opacity', String(s.wave));
-  fallbackTunnel.setAttribute('opacity', String(s.tunnel));
+  if (document.documentElement.classList.contains('webgl-fallback')) {
+    fallbackField ??= createFallbackField();
+    fallbackPath.setAttribute('d', fallbackField(s.assembly, reduced ? 0 : s.travel));
+    fallbackPath.setAttribute('stroke-width', String(1.5 + s.assembly * 5));
+  }
   fallbackNetwork.setAttribute('opacity', String(s.network));
   code.style.opacity = String(s.textLogic * .65);
   code.style.visibility = s.textLogic > .005 ? 'visible' : 'hidden';
@@ -148,6 +154,7 @@ applyMotion();
 function useFallback() {
   document.documentElement.classList.remove('webgl-ready');
   document.documentElement.classList.add('webgl-fallback');
+  update();
 }
 try {
   world = createWorld(canvas, useFallback);

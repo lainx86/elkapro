@@ -44,3 +44,14 @@ test('the continuation replaces the original sculpture and keeps a visual at eac
     if (i < 950) assert.equal(s.finale, 0, 'replay belongs at the new ending');
   }
 });
+
+test('filament-to-code assembly holds opacity and finishes before the camera enters', () => {
+  assert.equal(journeyState(.625).assembly, 0);
+  assert.equal(journeyState(.715).assembly, 1);
+  for (let i = 625; i <= 715; i++) {
+    const state = journeyState(i / 1000);
+    assert.equal(state.wave, 1, 'the source paths must not fade away');
+    assert.equal(state.tunnel, 1, 'the destination must not fade in');
+    assert.equal(state.travel, 0, 'the camera waits for the passage to form');
+  }
+});

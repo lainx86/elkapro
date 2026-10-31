@@ -310,6 +310,7 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
   }
   function onContextRestored() {
     contextLost = false;
+    document.documentElement.classList.remove('webgl-fallback');
     document.documentElement.classList.add('webgl-ready');
     schedule();
   }

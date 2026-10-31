@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { createContinuation } from '../src/continuation.ts';
 import { journeyState } from '../src/journey.ts';
-import { createFilamentField } from '../src/filament-field.ts';
+import { createFilamentField, createFallbackField, FILAMENT_COUNT } from '../src/filament-field.ts';
 
 test('each new installation has finite geometry inside the desktop and portrait camera', () => {
   Object.defineProperty(globalThis, 'matchMedia', { value: () => ({ matches: false }), configurable: true });
@@ -56,4 +56,56 @@ test('signal pulses move in full mode and remain fixed in reduced mode', () => {
   assert.notDeepEqual(Array.from(pulses.instanceMatrix.array), stationary);
   field.update(0, 10, .6, false);
   assert.equal(field.group.visible, false);
+});
+
+test('the same luminous cores deform along the filaments and become the code braces', () => {
+  const scene = new THREE.Scene();
+  const continuation = createContinuation(scene);
+  const camera = new THREE.PerspectiveCamera(39, 1.6, .1, 100);
+  const field = scene.children[0];
+  const tunnel = scene.children[1];
+  const lines = field.children.find(object => object instanceof THREE.LineSegments) as THREE.LineSegments;
+  const cores = tunnel.children.filter(object => object instanceof THREE.Mesh && !(object instanceof THREE.InstancedMesh)) as THREE.Mesh[];
+  assert.equal(cores.length, 20);
+  const initialReferences = [...cores];
+  let previous: number[] | undefined;
+  let midpoint: number[] | undefined;
+  for (const progress of [.625, .66, .69, .715, .69, .66, .625]) {
+    camera.position.set(0, .1, 12);
+    continuation.update(journeyState(progress), 0, false, false, camera, new THREE.Vector3(0, 0, -.25));
+    scene.updateMatrixWorld(true);
+    const m = journeyState(progress).assembly;
+    assert.equal(lines.morphTargetInfluences![0], m);
+    assert.deepEqual(field.matrixWorld.elements, tunnel.matrixWorld.elements);
+    for (const index of [0, 7, 19]) {
+      const mesh = cores[index];
+      assert.equal(mesh, initialReferences[index]);
+      assert.equal((mesh.material as THREE.MeshStandardMaterial).opacity, 1);
+      const lineIndex = Math.ceil(index * FILAMENT_COUNT / 20) * 224 + 112;
+      const center = new THREE.Vector3().fromBufferAttribute(lines.geometry.attributes.position, lineIndex).lerp(new THREE.Vector3().fromBufferAttribute(lines.geometry.morphAttributes.position[0], lineIndex), m);
+      const ring = new THREE.Vector3();
+      for (let i = 0; i < 8; i++) ring.add(mesh.getVertexPosition(56 * 9 + i, new THREE.Vector3()));
+      ring.divideScalar(8);
+      assert.ok(center.distanceTo(ring) < .00001, `light and brace separate at ${progress}, core ${index}`);
+    }
+    const marker = cores[0].getVertexPosition(56 * 9, new THREE.Vector3()).toArray();
+    if (progress === .625 && !previous) previous = marker;
+    else if (progress === .625) assert.deepEqual(marker, previous, 'reverse seeking must restore the geometry');
+    if (progress === .66 && !midpoint) midpoint = marker;
+    else if (progress === .66) assert.deepEqual(marker, midpoint);
+  }
+});
+
+test('the SVG fallback deforms continuously using finite path coordinates', () => {
+  const fallback = createFallbackField();
+  const initial = fallback(0, 0);
+  const complete = fallback(1, 0);
+  assert.notEqual(initial, complete);
+  for (const progress of [.625, .66, .69, .715, .76, .82]) {
+    const state = journeyState(progress);
+    const path = fallback(state.assembly, state.travel);
+    assert.ok(path.startsWith('M'));
+    assert.ok(!/NaN|Infinity/.test(path));
+  }
+  assert.equal(fallback(0, 0), initial);
 });

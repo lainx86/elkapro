@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { journeyState, smoothRange } from './journey.ts';
-import { createFilamentField } from './filament-field.ts';
+import { createFilamentField, FILAMENT_COUNT } from './filament-field.ts';
 
 type JourneyState = ReturnType<typeof journeyState>;
 
@@ -17,31 +17,31 @@ export function createContinuation(scene: THREE.Scene) {
 
   // Physical curly braces become architectural gates, rather than another electronic component.
   const tunnel = new THREE.Group();
-  const bracePoints = [[.55, 2.6], [-.15, 2.3], [-.25, 1.15], [-.36, .4], [-.85, 0], [-.36, -.4], [-.25, -1.15], [-.15, -2.3], [.55, -2.6]];
-  const braceCurve = new THREE.CatmullRomCurve3(bracePoints.map(([x, y]) => new THREE.Vector3(x, y, 0)));
-  const braceGeometry = new THREE.TubeGeometry(braceCurve, 64, .095, 8, false);
   const gateSilver = silver.clone();
   const gateBlue = blue.clone();
-  const gates: THREE.Group[] = [];
-  for (let i = 0; i < 10; i++) {
-    const gate = new THREE.Group();
-    const left = new THREE.Mesh(braceGeometry, i % 3 === 1 ? gateBlue : gateSilver);
-    left.position.x = -2.45;
-    const right = new THREE.Mesh(braceGeometry, i % 3 === 1 ? gateBlue : gateSilver);
-    right.position.x = 2.45;
-    right.scale.x = -1;
-    gate.add(left, right);
-    gate.position.z = 6 - i * 3.5;
-    gate.rotation.z = Math.sin(i * .8) * .22;
+  const finishedSilver = new THREE.Color(0xd9e9f8);
+  const finishedBlue = new THREE.Color(0x0050b8);
+  const gates: THREE.Mesh[] = [];
+  for (let i = 0; i < 20; i++) {
+    // The visible luminous core is the same mesh that widens into the metallic brace.
+    const source = field.paths[Math.ceil(i * FILAMENT_COUNT / 20)];
+    const geometry = new THREE.TubeGeometry(source, 112, .008, 8, false);
+    const destination = new THREE.TubeGeometry(field.codePaths[i], 112, .095, 8, false);
+    geometry.morphAttributes.position = [destination.attributes.position.clone()];
+    geometry.morphAttributes.normal = [destination.attributes.normal.clone()];
+    destination.dispose();
+    const gate = new THREE.Mesh(geometry, Math.floor(i / 2) % 3 === 1 ? gateBlue : gateSilver);
     gates.push(gate);
     tunnel.add(gate);
   }
   const bitMaterial = new THREE.MeshBasicMaterial({ color: 0x78c8ff, transparent: true });
   const bits = new THREE.InstancedMesh(new THREE.BoxGeometry(.09, .09, .22), bitMaterial, 160);
+  const bitPositions: THREE.Vector3[] = [];
   for (let i = 0; i < 160; i++) {
     const side = i % 4;
     const lane = Math.floor(i / 4);
     dummy.position.set(side < 2 ? (side === 0 ? -3.05 : 3.05) : Math.sin(lane) * 1.4, side < 2 ? Math.sin(lane * 1.7) * 1.1 : (side === 2 ? -2.8 : 2.8), 8 - lane * .85);
+    bitPositions.push(dummy.position.clone());
     dummy.scale.set(1, 1, 1 + (i % 3));
     dummy.updateMatrix();
     bits.setMatrixAt(i, dummy.matrix);
@@ -88,20 +88,40 @@ export function createContinuation(scene: THREE.Scene) {
   return {
     update(s: JourneyState, time: number, portrait: boolean, reduced: boolean, camera: THREE.PerspectiveCamera, originalTarget: THREE.Vector3) {
       const t = reduced ? 0 : time;
-      field.update(s.wave, t, s.progress, reduced);
+      const assembly = s.assembly;
+      field.update(s.wave, t, s.progress, reduced, assembly);
       tunnel.visible = s.tunnel > .001;
       network.visible = s.network > .001;
-      wave.position.set(portrait ? .15 : 1.3, portrait ? -1.8 : -.8, 0);
-      wave.rotation.set(reduced ? .15 : .15 + Math.sin(t * .12) * .04, reduced ? -.25 : -.25 + smoothRange(.53, .68, s.progress) * .4, portrait ? .6 : .18);
-      wave.scale.setScalar(portrait ? .65 : 1);
+      wave.position.set((portrait ? .15 : 1.3) * (1 - assembly), THREE.MathUtils.lerp(portrait ? -1.8 : -.8, portrait ? -1.2 : -.15, assembly), 0);
+      wave.rotation.set((.15 + Math.sin(t * .12) * .04) * (1 - assembly), (reduced ? -.25 : -.25 + smoothRange(.53, .625, s.progress) * .2) * (1 - assembly), (portrait ? .6 : .18) * (1 - assembly));
+      wave.scale.setScalar(portrait ? THREE.MathUtils.lerp(.65, .8, assembly) : 1);
 
       gateSilver.opacity = s.tunnel;
       gateBlue.opacity = s.tunnel;
       bitMaterial.opacity = s.tunnel * .7;
-      tunnel.position.y = portrait ? -1.2 : -.15;
-      tunnel.scale.setScalar(portrait ? .8 : 1);
-      tunnel.rotation.z = reduced ? 0 : Math.sin(t * .1) * .04;
-      if (tunnel.visible) gates.forEach((gate, i) => { gate.rotation.z = Math.sin(i * .8 + t * .08) * .22; });
+      tunnel.position.copy(wave.position);
+      tunnel.quaternion.copy(wave.quaternion);
+      tunnel.scale.copy(wave.scale);
+      gateSilver.color.set(0xb9e7ff).lerp(finishedSilver, assembly);
+      gateBlue.color.set(0xb9e7ff).lerp(finishedBlue, assembly);
+      for (const material of [gateSilver, gateBlue]) {
+        material.metalness = assembly * .92;
+        material.emissive.set(0x78c8ff);
+        material.emissiveIntensity = (1 - assembly) * .9;
+      }
+      gates.forEach(gate => { gate.morphTargetInfluences![0] = assembly; });
+      const bitGrowth = smoothRange(.72, .76, s.progress);
+      bits.visible = bitGrowth > .001;
+      if (bits.visible) {
+        bitPositions.forEach((position, i) => {
+          dummy.position.copy(position);
+          dummy.scale.set(bitGrowth, bitGrowth, bitGrowth * (1 + (i % 3)));
+          dummy.updateMatrix();
+          bits.setMatrixAt(i, dummy.matrix);
+        });
+        bits.instanceMatrix.needsUpdate = true;
+        bits.computeBoundingSphere();
+      }
 
       nodeMaterial.opacity = s.network;
       linkMaterial.opacity = s.network * .44;
