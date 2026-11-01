@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { journeyState } from './journey';
 import { createWorld } from './world';
+import { mountMaterials } from './materials';
 
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
@@ -30,6 +31,7 @@ const power = element('[data-copy="power"]');
 const logic = element('[data-copy="logic"]');
 const code = element('[data-copy="code"]');
 const outro = element('[data-copy="outro"]');
+const disposeMaterials = mountMaterials(element('#preview-materials'), 3);
 const preference = matchMedia('(prefers-reduced-motion: reduce)');
 const playhead = { progress: 0 };
 let reduced = preference.matches;
@@ -57,6 +59,7 @@ function update() {
   showCopy(power, s.power, (1 - s.power) * 30);
   showCopy(logic, s.textLogic, (1 - s.textLogic) * 30);
   showCopy(outro, s.outro, (1 - s.outro) * 25);
+  document.documentElement.classList.toggle('choosing-materials', s.outro >= .5);
   code.style.opacity = String(s.textLogic * .65);
   code.style.visibility = s.textLogic > .005 ? 'visible' : 'hidden';
   const percent = Math.round(s.progress * 100);
@@ -143,6 +146,8 @@ if (import.meta.hot) {
     timeline.scrollTrigger?.kill();
     timeline.kill();
     world?.dispose();
+    disposeMaterials();
+    document.documentElement.classList.remove('choosing-materials');
     motionButton.removeEventListener('click', onMotionToggle);
     replayButton.removeEventListener('click', replay);
     identity.removeEventListener('click', replay);
