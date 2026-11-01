@@ -4,7 +4,7 @@ An interactive art installation for the Electrical & Programming division of Ate
 
 ## Visual language
 
-The experience is one continuous spatial composition, with no cards, navigation sections, scroll snapping, or hard scene cuts. Native vertical scrolling traverses metal lightning, circuitry, and a diamond framework before continuing into a field of blue-white light filaments, architectural code-brace tunnel, and spatial network constellation. The lightning and chip leave completely during the handoff to the filament field. Large typography sits behind the sculpture at the opening; smaller narrative text floats above it during the journey.
+The experience is one continuous spatial composition, with no cards, navigation sections, scroll snapping, or hard scene cuts. Native vertical scrolling traverses metal lightning, circuitry, and a diamond framework before ending with the Aterkia logo and replay control. Large typography sits behind the sculpture at the opening; smaller narrative text floats above it during the journey.
 
 | Role | Value |
 | --- | --- |
@@ -28,32 +28,23 @@ A single GSAP timeline maps document scroll to progress 0–1. `journeyState()` 
 
 | Progress | Visual direction | Copy |
 | --- | --- | --- |
-| 0–0.11 | A chrome lightning sculpture intersecting orbital conductors | ELKAPRO / Arus menjadi logika |
-| 0.095–0.245 | The sculpture contracts toward a chip while circuit routes expand | Mengalir. Terhubung. |
-| 0.24–0.405 | Ordered points and HTML code fragments emerge around the processor | Logika yang menggerakkan. |
-| 0.415–0.54 | Original diamond ending becomes an interlude | Arus menjadi logika. / Perjalanan belum selesai |
-| 0.5–0.625 | Open light filaments curve around a spatial signal field, with travelling light pulses | Yang tak terlihat. Kini terbaca. |
-| 0.625–0.715 | Filaments deform into ten pairs of braces; the same luminous cores thicken and become metal | Light becomes architecture |
-| 0.715–0.87 | Camera advances through the formed corridor; binary fragments grow into the passage | Masuk ke bahasa mesin. |
-| 0.82–1 | Open constellation of connected nodes with moving data packets | Satu titik. Ribuan arah. |
-| 0.95–1 | Network remains as the original logo and replay control return | Semua terhubung. |
+| 0–0.22 | A chrome lightning sculpture intersecting orbital conductors | ELKAPRO / Arus menjadi logika |
+| 0.19–0.49 | The sculpture contracts toward a chip while circuit routes expand | Mengalir. Terhubung. |
+| 0.48–0.81 | Ordered points and HTML code fragments emerge around the processor | Logika yang menggerakkan. |
+| 0.83–1 | The field resolves into nested diamond outlines with the original logo and replay | Arus menjadi logika. |
 
-The filament-to-code handoff is a continuous geometry morph at constant opacity. Source and destination share curve samples and transforms; there is no object replacement or camera reset at this join. Pulses follow the interpolated curves. The camera waits until assembly completes, then moves down the passage. Other narrative boundaries retain their existing choreography; text is never simultaneously readable at full strength. Desktop scroll height is 1500svh; mobile is 1200svh. The first half preserves the old journey's physical scroll distance: 700svh on desktop and 550svh on mobile. Replay appears only at the new endpoint.
+Desktop scroll height is 800svh; mobile is 650svh. The complete journey maps directly to progress 0–1, and the progress indicator reaches 100 at the logo/replay ending. Portrait framing uses a separate camera path. Text is never simultaneously readable at full strength.
 
 ## Accessibility and resilience
 
 All meaningful copy is HTML. Decorative 3D, numerical readouts, and example code are hidden from assistive technology. Inactive narrative text is inert and hidden from the accessibility tree. Controls use native buttons and links, visible focus rings, and touch targets of at least 44px.
 
-Reduced motion follows the OS setting until explicitly overridden with the “Gerak minim” control. The preference persists locally when storage is available. Reduced mode keeps the camera static and disables ambient movement. Geometry assembly remains controlled directly by scrolling. WebGL failure or context loss reveals the SVG artwork; its filament path deforms into the braces using the same source and target curves. No JavaScript leaves a static artwork and an explanatory message.
-
-The signal field uses 72 fine paths with vertex-color gradients, 20 luminous cores, and instanced travelling pulses. Cores have matching source/target tube topology, allowing both positions and normals to morph while the material changes from luminous blue-white to metal. The strands share a batched geometry; portrait framing rotates the field diagonally and then aligns it with the tunnel. No geometry is regenerated per frame.
+Reduced motion follows the OS setting until explicitly overridden with the “Gerak minim” control. The preference persists locally when storage is available. Reduced mode keeps the camera static and disables ambient movement. WebGL failure or context loss reveals the SVG artwork. No JavaScript leaves a static artwork and an explanatory message.
 
 ## Optical illumination
 
 Circuit traces and travelling pulses are HDR light sources. The pulses have smaller hot cores and roughly six times the trace luminance. Both are tone mapped in the main image, and visible emission feeds a selective UnrealBloomPass with five Gaussian blur scales. Brightness produces the optical spread; there are no halo ribbons, radial discs, or camera-facing particle planes.
 
-The same optical pass also receives the blue-white filament strands, their travelling signal points, and all 20 morphing code-brace cores. Strand gradients retain separate bright and dim layers. Pulse points have the same high radiance as the circuit signals. Brace emission stays above HDR white throughout assembly and continues after the material becomes metallic, so the glow follows the uninterrupted shape transformation. One shared pass handles all these sources; the network constellation is excluded.
-
-The sharp base image is drawn normally. A bounded-resolution half-float emission buffer renders the selected sources with black surface occluders, so hidden lights do not shine through solid geometry. Only the blurred result is added over the base using an alpha-aware premultiplied composite. HTML typography and transparent canvas regions remain visible. Bloom follows the circuit, filament, and tunnel choreography and is inactive at the final network composition. Devices without half-float color support retain the tone-mapped sources; a failed optical pass restores rendering state and leaves the scene running.
+The sharp base image is drawn normally. A bounded-resolution half-float emission buffer renders the circuit sources with black surface occluders, so hidden lights do not shine through solid geometry. Only the blurred result is added over the base using an alpha-aware premultiplied composite. HTML typography and transparent canvas regions remain visible. Bloom follows the circuit choreography. Devices without half-float color support retain the tone-mapped sources; a failed optical pass restores rendering state and leaves the scene running.
 
 No generated images, third-party media requests, audio, analytics, backend, or telemetry. Repeated geometry uses instancing or merged buffers; pixel ratio and mobile particle counts are capped. Rendering pauses while the document is hidden.

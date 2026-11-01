@@ -44,7 +44,7 @@ test('only selected emission enters bloom, with occluders and canvas state resto
       assert.equal((surface.material as THREE.MeshBasicMaterial).color.getHex(), 0);
       assert.equal(emitter.material.color.g, 3);
       assert.equal(line.visible, false);
-      assert.equal(selectedLine.visible, true, 'selected filament lines must remain visible in the optical pass');
+      assert.equal(selectedLine.visible, true, 'selected line sources must remain visible in the optical pass');
       assert.equal(selectedLine.material.color.b, 4);
       const target = harness.renderer.getRenderTarget()!;
       assert.equal(target.texture.type, THREE.HalfFloatType);

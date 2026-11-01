@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { journeyState, smoothRange } from './journey';
-import { createContinuation } from './continuation';
 import { createSelectiveBloom } from './selective-bloom';
 
 const BLUE = 0x0050b8;
@@ -191,8 +190,7 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     new THREE.Vector3(0, .3, 18), new THREE.Vector3(.8, .7, 15), new THREE.Vector3(.6, 1.3, 13), new THREE.Vector3(-.4, .3, 15), new THREE.Vector3(0, .3, 18),
   ], false, 'catmullrom', .35);
   const cameraTarget = new THREE.Vector3();
-  const continuation = createContinuation(scene);
-  const bloom = createSelectiveBloom(renderer, scene, camera, [traces, pulses, ...continuation.emitters]);
+  const bloom = createSelectiveBloom(renderer, scene, camera, [traces, pulses]);
   let portrait = false;
   let width = 1;
   let height = 1;
@@ -227,12 +225,10 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     const c = minimal ? 0 : s.circuit;
     const l = minimal ? 0 : s.logic;
     const r = minimal ? 0 : s.resolve;
-    const dissolve = smoothRange(.7, .9, s.original);
+    const dissolve = smoothRange(.7, .9, progress);
 
     const rootX = minimal ? (portrait ? .3 : 1.2) : portrait ? .3 * (1 - s.outro) : 1.2 * (1 - s.circuit) + 2 * s.resolve - .5 * s.logic;
-    root.visible = s.departure < (minimal ? .5 : .999);
-    root.scale.setScalar(minimal ? 1 : 1 - s.departure * .98);
-    root.position.set(rootX, portrait ? -1.35 : -.15, minimal ? 0 : -s.departure * 6);
+    root.position.set(rootX, portrait ? -1.35 : -.15, 0);
     root.rotation.set(.08 + c * .2, -.35 + c * .7 - l * .6 + r * .4, -.15 + c * .2);
     if (!minimal) {
       root.rotation.y += pointerX * .035 + Math.sin(animated * .24) * .025;
@@ -257,7 +253,7 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     diamondLines.forEach((diamond, i) => { diamond.rotation.z = (1 - r) * i * .12 + Math.sin(animated * .15 + i * .3) * .012 * (1 - r); });
 
     routes.forEach((path, i) => {
-      const t = minimal ? i / routes.length : ((s.original * 3.5 + animated * .1 + i / routes.length) % 1 + 1) % 1;
+      const t = minimal ? i / routes.length : ((progress * 3.5 + animated * .1 + i / routes.length) % 1 + 1) % 1;
       dummy.position.copy(path.getPoint(t));
       dummy.scale.setScalar(.6 + c * .7);
       dummy.rotation.set(0, 0, 0);
@@ -275,17 +271,16 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     }
     particlesGeometry.attributes.position.needsUpdate = true;
     particles.rotation.y = animated * .008;
-    particles.position.set(0, portrait ? -1 : 0, minimal ? 0 : -s.travel * 24);
-    particleMaterial.opacity = (.42 + l * .25 - r * .3) * (1 - s.departure * .5);
+    particles.position.set(0, portrait ? -1 : 0, 0);
+    particleMaterial.opacity = .42 + l * .25 - r * .3;
 
     const path = portrait ? portraitPath : cameraPath;
-    camera.position.copy(path.getPointAt(minimal ? 0 : s.original));
+    camera.position.copy(path.getPointAt(minimal ? 0 : progress));
     cameraTarget.set(portrait ? 0 : -.15 * c, portrait ? .1 : 0, -.25 * c);
     camera.lookAt(cameraTarget);
-    continuation.update(s, animated, portrait, minimal, camera, cameraTarget);
     renderer.render(scene, camera);
     if (bloomAvailable) {
-      try { bloom.render(Math.max(c * (1 - r * .7) * (1 - s.departure), s.wave)); }
+      try { bloom.render(c * (1 - r * .7)); }
       catch (error) { bloomAvailable = false; console.warn('Bloom unavailable; keeping the light sources visible.', error); }
     }
   }

@@ -3,7 +3,6 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { journeyState } from './journey';
 import { createWorld } from './world';
-import { createFallbackField } from './filament-field';
 
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
@@ -30,18 +29,7 @@ const intro = element('[data-copy="intro"]');
 const power = element('[data-copy="power"]');
 const logic = element('[data-copy="logic"]');
 const code = element('[data-copy="code"]');
-const wave = element('[data-copy="wave"]');
-const tunnel = element('[data-copy="tunnel"]');
-const network = element('[data-copy="network"]');
 const outro = element('[data-copy="outro"]');
-const outroFirst = element('.outro-first');
-const outroSecond = element('.outro-second');
-const continueHint = element('.continue-hint');
-const fallbackOrigin = document.getElementById('fallback-origin')!;
-const fallbackWave = document.getElementById('fallback-wave')!;
-const fallbackNetwork = document.getElementById('fallback-network')!;
-const fallbackPath = document.getElementById('fallback-field-path')!;
-let fallbackField: ReturnType<typeof createFallbackField> | undefined;
 const preference = matchMedia('(prefers-reduced-motion: reduce)');
 const playhead = { progress: 0 };
 let reduced = preference.matches;
@@ -68,20 +56,7 @@ function update() {
   showCopy(intro, s.intro, -s.circuit * 70);
   showCopy(power, s.power, (1 - s.power) * 30);
   showCopy(logic, s.textLogic, (1 - s.textLogic) * 30);
-  showCopy(wave, s.textWave, (1 - s.textWave) * 30);
-  showCopy(tunnel, s.textTunnel, (1 - s.textTunnel) * 30);
-  showCopy(network, s.textNetwork, (1 - s.textNetwork) * 30);
   showCopy(outro, s.outro, (1 - s.outro) * 25);
-  replayButton.hidden = s.finale < .5;
-  continueHint.hidden = s.progress > .8;
-  fallbackOrigin.setAttribute('opacity', String(1 - s.departure));
-  fallbackWave.setAttribute('opacity', String(s.wave));
-  if (document.documentElement.classList.contains('webgl-fallback')) {
-    fallbackField ??= createFallbackField();
-    fallbackPath.setAttribute('d', fallbackField(s.assembly, reduced ? 0 : s.travel));
-    fallbackPath.setAttribute('stroke-width', String(1.5 + s.assembly * 5));
-  }
-  fallbackNetwork.setAttribute('opacity', String(s.network));
   code.style.opacity = String(s.textLogic * .65);
   code.style.visibility = s.textLogic > .005 ? 'visible' : 'hidden';
   const percent = Math.round(s.progress * 100);
@@ -90,10 +65,7 @@ function update() {
     progressNumber.textContent = String(percent).padStart(3, '0');
     powerValue.textContent = String(Math.round(s.circuit * 100)).padStart(3, '0');
     signalValue.textContent = String(Math.round(s.logic * 100)).padStart(3, '0');
-    objectLabel.textContent = s.progress > .82 ? 'INTELLIGENCE IS A CONNECTION' : s.progress > .66 ? 'A LANGUAGE YOU CAN WALK THROUGH' : s.progress > .5 ? 'GIVING THE INVISIBLE A FORM' : s.original < .22 ? 'ENERGY IN ITS RAWEST FORM' : s.original < .48 ? 'EVERY CONNECTION, A POSSIBILITY' : s.original < .8 ? 'WHERE SIGNAL BECOMES INTENTION' : 'ONE CURRENT. INFINITE POSSIBILITIES.';
-    outroFirst.textContent = s.progress > .8 ? 'Semua' : 'Arus menjadi';
-    outroSecond.textContent = s.progress > .8 ? 'terhubung.' : 'logika.';
-    document.documentElement.dataset.phase = s.progress > .83 ? 'network' : s.progress > .67 ? 'tunnel' : s.progress > .52 ? 'wave' : 'origin';
+    objectLabel.textContent = s.progress < .22 ? 'ENERGY IN ITS RAWEST FORM' : s.progress < .48 ? 'EVERY CONNECTION, A POSSIBILITY' : s.progress < .8 ? 'WHERE SIGNAL BECOMES INTENTION' : 'ONE CURRENT. INFINITE POSSIBILITIES.';
     lastPercent = percent;
   }
   progressTrack.style.transform = `scaleX(${s.progress})`;
