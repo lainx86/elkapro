@@ -2,3 +2,6 @@ node_modules/
 dist/
 .DS_Store
 .openai/*.tar.gz
+.agents/
+.codex/
+.aws/
