@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#030916" />
-    <meta name="description" content="Contoh halaman materi Git dan GitHub di ruang belajar ELKAPRO. Isi materi ini masih berupa konten dummy." />
+    <meta name="description" content="Belajar Git dan GitHub bersama ELKAPRO: pengantar version control dan menghubungkan Git ke GitHub menggunakan SSH di Windows dan Linux." />
     <meta property="og:title" content="Git dan GitHub — ELKAPRO" />
-    <meta property="og:description" content="Materi dummy untuk topik Git dan GitHub, bidang Program." />
+    <meta property="og:description" content="Bab 0: Pendahuluan. Bab 1: Menghubungkan Git ke GitHub menggunakan SSH." />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://elkapro-arus-aterkia.entahlah2390.chatgpt.site/materi/git-github/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -19,20 +19,179 @@
       <a class="lesson-back" href="/materi/#program">← Semua materi</a>
     </header>
     <main id="lesson-content" class="lesson-main" tabindex="-1">
-      <header class="lesson-heading">
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/materi/">Materi</a><span aria-hidden="true">/</span><a href="/materi/#program">Program</a><span aria-hidden="true">/</span><span aria-current="page">Git dan GitHub</span></nav>
-        <p class="eyebrow">PROGRAM / TOPIK 01</p>
-        <h1>Git dan <span>GitHub.</span></h1>
-        <p class="lesson-lead">Contoh halaman materi untuk ruang belajar ELKAPRO.</p>
-        <p class="dummy-notice"><strong>Materi dummy.</strong> Isi pembelajaran sebenarnya belum ditambahkan.</p>
-      </header>
-      <article class="lesson-article" aria-label="Contoh isi materi Git dan GitHub">
-        <section><p class="chapter-number">01 / PENGANTAR</p><h2>Kenali topiknya.</h2><p>Bagian ini disiapkan untuk pengantar Git dan GitHub. Untuk sementara, paragraf ini menjadi contoh tampilan teks materi.</p></section>
-        <section><p class="chapter-number">02 / PEMBAHASAN</p><h2>Ruang untuk belajar.</h2><p>Penjelasan, contoh, dan ilustrasi topik nantinya akan ditempatkan di sini. Konten pada halaman ini masih berupa dummy agar alur membaca dapat dilihat terlebih dahulu.</p><div class="dummy-block"><span>AREA CONTOH</span><p>Contoh kode, gambar, atau penjelasan akan ditambahkan di sini.</p></div></section>
-        <section><p class="chapter-number">03 / LATIHAN</p><h2>Coba sendiri.</h2><p>Area ini disiapkan untuk latihan dan petunjuk pengerjaan. Belum ada soal atau penilaian pada materi dummy ini.</p></section>
-        <footer class="lesson-end"><a href="/materi/#program">← Semua topik Program</a><span>ELKAPRO / ATERKIA</span></footer>
-      </article>
-    </main>
-    <script type="module" src="/src/lesson.ts"></script>
-  </body>
-</html>
+<header class="lesson-heading">
+<nav class="breadcrumb" aria-label="Breadcrumb"><a href="/materi/">Materi</a><span aria-hidden="true">/</span><a href="/materi/#program">Program</a><span aria-hidden="true">/</span><span aria-current="page">Git dan GitHub</span></nav>
+<p class="eyebrow">PROGRAM / TOPIK 01</p><h1>Git dan <span>GitHub.</span></h1>
+<p class="lesson-lead">Kenali version control, lalu hubungkan Git ke GitHub menggunakan SSH.</p><p class="lesson-meta">2 BAB TERSEDIA <span aria-hidden="true">/</span> WINDOWS & LINUX</p>
+</header>
+<div class="lesson-layout">
+<nav class="lesson-toc" aria-label="Daftar bab Git dan GitHub"><p class="eyebrow">DALAM TOPIK INI</p><a href="#bab-0"><span>00</span> Pendahuluan</a><a href="#bab-1"><span>01</span> GitHub melalui SSH</a><div class="lesson-os-links"><a href="#windows">Windows / PowerShell</a><a href="#linux">Linux / Bash</a></div></nav>
+<article class="lesson-article" aria-label="Materi Git dan GitHub">
+<section class="lesson-chapter" id="bab-0" aria-labelledby="bab-0-title">
+<p class="chapter-number">BAB 00 / PENDAHULUAN</p><h2 id="bab-0-title">Kenapa kita butuh Git?</h2>
+<p class="chapter-opening">Git adalah <strong>Distributed Version Control System.</strong></p>
+<dl class="git-definition"><div><dt>Version control</dt><dd>Helps you track and manage code changes over time.</dd></div><div><dt>Distributed</dt><dd>Means that every developer’s computer has a complete copy of the codebase, including its entire history of changes and information about who changed what and when, allowing you to blame someone. Hopefully, people won’t blame you.</dd></div></dl>
+<p>Apakah kita bisa ngoding tanpa Git? Well... tentu saja bisa. Tapi... mungkin workflow kamu bakalan kelihatan kayak gini:</p>
+<div class="story-beat"><h3>Folder yang terus bertambah.</h3><p>Misal kamu punya project di sebuah folder di laptop kamu bernama <code>MyProject</code>. Nah, selama kamu berprogres, kamu mungkin kepikiran buat gak mau kehilangan project kamu itu, bisa aja gak sengaja dihapus kucing kamu misalnya. Terus kamu bikin copy dari project kamu itu, mulai dari <code>MyProject_v1</code>, <code>MyProject_v2</code>, <code>MyProject_v3</code>, dan seterusnya.</p><figure class="story-figure">
+<svg viewBox="0 0 600 290" role="img" aria-labelledby="copies-title copies-desc"><title id="copies-title">Satu project menjadi banyak folder versi</title><desc id="copies-desc">MyProject disalin menjadi MyProject_v1, MyProject_v2, dan MyProject_v3 agar versi sebelumnya tetap tersimpan.</desc>
+<path class="diagram-grid" d="M0 72H600M0 145H600M0 218H600M150 0V290M300 0V290M450 0V290"/>
+<path class="flow-line" pathLength="1" d="M130 145H210V65H280M210 145H280M210 145V225H280"/>
+<path d="M58,127v48h62V123h-32l-8,-8h-22v12z" class="diagram-folder"/><text x="89" y="205" text-anchor="middle">MyProject</text>
+<path d="M285,47v48h62V43h-32l-8,-8h-22v12z" class="diagram-folder"/><path d="M285,127v48h62V123h-32l-8,-8h-22v12z" class="diagram-folder"/><path d="M285,207v48h62V203h-32l-8,-8h-22v12z" class="diagram-folder"/>
+<text x="370" y="72">MyProject_v1</text><text x="370" y="152">MyProject_v2</text><text x="370" y="232">MyProject_v3</text>
+<circle cx="210" cy="145" r="4" class="diagram-node"/></svg>
+<figcaption><span>01 / COPY, COPY, COPY</span> Satu project. Banyak folder cadangan.</figcaption></figure></div>
+<div class="story-beat"><h3>Dua laptop, dua versi.</h3><p>Terus misal rekan kamu minta project kamu yang versi terbaru karena kalian bekerja secara tim. Terus kamu kasih lah file <code>MyProject_v3</code> kamu ke dia. Selagi dia ngerjain kerjaan dia di laptopnya, kamu ikut berprogres juga dan terciptalah <code>MyProject_v4</code>, terus tiba-tiba rekan kamu ngirim versi buatannya, misalnya <code>MyProject_v3_buatan_guweh</code>.</p><figure class="story-figure">
+<svg viewBox="0 0 600 310" role="img" aria-labelledby="parallel-title parallel-desc"><title id="parallel-title">Dua laptop, dua versi yang berkembang bersamaan</title><desc id="parallel-desc">MyProject_v3 dibagikan ke teman. Kamu melanjutkan ke MyProject_v4, sementara teman mengerjakan MyProject_v3_buatan_guweh.</desc>
+<path class="diagram-grid" d="M0 78H600M0 155H600M0 233H600M150 0V310M300 0V310M450 0V310"/>
+<text x="300" y="42" text-anchor="middle">MyProject_v3</text><circle cx="300" cy="62" r="4" class="diagram-node"/>
+<path class="flow-line" pathLength="1" d="M300 68V90H145V135M300 90H455V135"/>
+<g class="diagram-device"><rect x="45" y="142" width="200" height="110" rx="7"/><path d="M34 263H256L246 274H44z"/><path d="M65 164H105M65 176H90"/></g>
+<g class="diagram-device"><rect x="355" y="142" width="200" height="110" rx="7"/><path d="M344 263H566L556 274H354z"/><path d="M375 164H415M375 176H400"/></g>
+<text class="diagram-label" x="145" y="296" text-anchor="middle">LAPTOP KAMU</text><text class="diagram-label" x="455" y="296" text-anchor="middle">LAPTOP TEMAN</text>
+<text x="145" y="216" text-anchor="middle">MyProject_v4</text><text class="diagram-small" x="455" y="209" text-anchor="middle">MyProject_v3</text><text class="diagram-small" x="455" y="229" text-anchor="middle">_buatan_guweh</text></svg>
+<figcaption><span>02 / KERJA PARALEL</span> Versi kamu dan versi teman mulai berbeda.</figcaption></figure></div>
+<div class="story-beat"><h3>Digabung. Lalu error.</h3><p>Terus kamu bikin versi baru lagi dengan masukin perubahan dari temen kamu ke <code>MyProject_v4</code> dan terciptalah <code>MyProject_v5</code>. Terus di <code>MyProject_v5</code>, lah kok malah gak jalan lagi dan error kodenya? Terus kamu cek satu per satu kodenya buat nyari yang salah, apakah yang salah di bagianmu, atau di bagian temenmu? Terus kalau gini siapa yang tanggung jawab?</p><figure class="story-figure">
+<svg viewBox="0 0 600 290" role="img" aria-labelledby="merge-title merge-desc"><title id="merge-title">Penggabungan manual menghasilkan versi yang error</title><desc id="merge-desc">Perubahan MyProject_v4 dan MyProject_v3_buatan_guweh digabung menjadi MyProject_v5, tetapi program tidak berjalan. Perubahan harus diperiksa satu per satu.</desc>
+<path class="diagram-grid" d="M0 72H600M0 145H600M0 218H600M150 0V290M300 0V290M450 0V290"/>
+<text x="130" y="42" text-anchor="middle">MyProject_v4</text><text class="diagram-small" x="450" y="32" text-anchor="middle">MyProject_v3</text><text class="diagram-small" x="450" y="52" text-anchor="middle">_buatan_guweh</text>
+<path class="flow-line" pathLength="1" d="M130 62V100H300V130M450 65V100H300M330 175H420"/>
+<path d="M270,147v48h62V143h-32l-8,-8h-22v12z" class="diagram-folder"/><text x="301" y="235" text-anchor="middle">MyProject_v5</text>
+<g class="diagram-error"><circle cx="454" cy="175" r="26"/><path d="M446 167l16 16M462 167l-16 16"/></g><text class="diagram-error-label" x="454" y="235" text-anchor="middle">ERROR</text></svg>
+<figcaption><span>03 / GABUNG MANUAL</span> Mana perubahan yang membuatnya berhenti berjalan?</figcaption></figure></div>
+<p>Kelihatan gak rapi, bingungin, dan repot banget, kan?</p><p class="chapter-takeaway">Nah, makanya di sinilah <strong>Git</strong> muncul.</p>
+<a class="chapter-next" href="#bab-1">Lanjut ke bab 1 <span aria-hidden="true">↓</span></a>
+</section>
+<section class="lesson-chapter" id="bab-1" aria-labelledby="bab-1-title"><p class="chapter-number">BAB 01 / KONEKSI</p><h2 id="bab-1-title">Menghubungkan Git ke GitHub menggunakan SSH.</h2>
+<p>Oke, sekarang kita udah tahu kenapa git itu berguna. Tapi ada satu masalah lagi. Kalau project kita cuma disimpan di laptop, terus laptopnya tiba-tiba rusak, hilang, atau dipinjam kucing kamu buat main game, gimana? Ya, project-nya bisa ikut hilang juga. Nah, makanya kita bisa simpan repository kita secara online menggunakan <strong>GitHub</strong>.</p>
+<p>Bentar, git sama GitHub itu beda? Yup. <strong>Git</strong> adalah <em>version control system</em> yang kita pakai buat mengelola perubahan project, sedangkan <strong>GitHub</strong> adalah platform buat menyimpan dan berkolaborasi dalam repository git secara online. Jadi, kamu bisa pakai git tanpa GitHub, tapi di tutorial ini kita bakal pakai keduanya.</p>
+<p>Sebelum kita bisa kirim perubahan dari laptop ke GitHub menggunakan <code>git push</code>, kita perlu mengatur cara laptop kita berkomunikasi dengan GitHub. Salah satu caranya adalah menggunakan <strong>SSH (Secure Shell)</strong>. Dengan SSH, GitHub bisa mengenali laptop kita lewat sepasang <em>key</em>, jadi kita gak perlu login pakai username dan password GitHub setiap kali melakukan operasi git.</p>
+<p>Bayangin aja SSH key ini kayak kunci dan gembok. Ada <strong>public key</strong> yang boleh kita kasih ke GitHub, dan ada <strong>private key</strong> yang harus tetap disimpan di laptop kita. Jadi, jangan sampai private key kamu dikirim ke teman atau di-upload ke repository, ya. Nanti yang punya akses ke repository kamu malah bukan cuma kamu.</p>
+<p>Tutorialnya aku pisah jadi dua versi. Pilih sesuai sistem operasi dan terminal yang kamu pakai:</p>
+<ul>
+<li><a class="platform-choice" href="#windows"><strong>Windows:</strong> menggunakan <strong>PowerShell</strong>, bukan Command Prompt atau Git Bash.</a></li>
+<li><a class="platform-choice" href="#linux"><strong>Linux:</strong> menggunakan <strong>Bash</strong>.</a></li>
+</ul>
+<p>Sebelum mulai, pastikan kamu sudah punya akun <a href="https://github.com/">GitHub</a> dan sudah meng-install Git serta OpenSSH. Kita juga bakal pakai algoritma <strong>Ed25519</strong> buat membuat SSH key.</p>
+<h3 id="windows">Versi 1: Windows (PowerShell)</h3>
+<h4>1. Pastikan Git dan SSH sudah terpasang</h4>
+<p>Pertama, buka <strong>PowerShell</strong>. Bisa lewat Start Menu, Windows Terminal, atau terminal di VS Code. Terus coba jalankan:</p>
+<div class="code-example"><span class="code-language">powershell</span><pre tabindex="0" aria-label="Perintah powershell"><code>git --version
+ssh -V</code></pre></div>
+<p>Kalau muncul nomor versinya, berarti Git dan SSH sudah bisa dipakai. Kalau <code>git</code> gak dikenali, install dulu <a href="https://git-scm.com/downloads/win">Git for Windows</a>. Kalau <code>ssh</code> gak dikenali, pastikan fitur <strong>OpenSSH Client</strong> di Windows sudah terpasang.</p>
+<h4>2. Cek apakah kamu sudah punya SSH key</h4>
+<p>Sebelum bikin kunci baru, kita cek dulu apakah sebelumnya kamu sudah punya SSH key. Ketik:</p>
+<div class="code-example"><span class="code-language">powershell</span><pre tabindex="0" aria-label="Perintah powershell"><code>Get-ChildItem &quot;$HOME\.ssh&quot;</code></pre></div>
+<p>Kalau folder <code>.ssh</code> belum ada dan muncul error, tenang, itu normal kalau kamu belum pernah bikin SSH key. Kalau ada file seperti <code>id_ed25519</code> dan <code>id_ed25519.pub</code>, berarti kamu sudah punya sepasang SSH key. Kamu boleh pakai key itu kalau memang ingin menggunakannya untuk GitHub.</p>
+<h4>3. Buat SSH key baru</h4>
+<p>Kalau belum punya key, jalankan:</p>
+<div class="code-example"><span class="code-language">powershell</span><pre tabindex="0" aria-label="Perintah powershell"><code>ssh-keygen -t ed25519 -C &quot;email_kamu@example.com&quot;</code></pre></div>
+<p>Ganti <code>email_kamu@example.com</code> dengan email yang kamu pakai di GitHub. Bagian <code>-t ed25519</code> berarti kita mau membuat key dengan algoritma Ed25519, sedangkan <code>-C</code> dipakai untuk memberi label pada key tersebut.</p>
+<p>Nanti kamu akan ditanya di mana key-nya mau disimpan. Kalau belum punya key dengan nama yang sama, cukup tekan <strong>Enter</strong> untuk memakai lokasi default. Biasanya file-nya bakal disimpan di <code>C:\Users\USERNAME\.ssh\</code>.</p>
+<p>Terus kamu akan ditanya mau memakai <strong>passphrase</strong> atau enggak. Passphrase ini semacam password tambahan untuk melindungi private key kamu. Sebaiknya isi dengan passphrase yang kuat, lalu konfirmasi. Saat diketik, karakternya memang gak kelihatan. Itu normal.</p>
+<p><strong>Penting:</strong> Kalau muncul pertanyaan untuk menimpa (<em>overwrite</em>) key yang sudah ada, jangan asal pilih <code>yes</code>. Kamu bisa memakai key lama atau membuat key baru dengan nama file berbeda. Jangan sampai key yang masih dipakai malah hilang.</p>
+<p>Setelah selesai, kamu bakal punya dua file:</p>
+<ul>
+<li><code>id_ed25519</code> -&gt; <strong>private key</strong>. Jangan dibagikan.</li>
+<li><code>id_ed25519.pub</code> -&gt; <strong>public key</strong>. Ini yang nanti kita masukkan ke GitHub.</li>
+</ul>
+<h4>4. Jalankan ssh-agent</h4>
+<p>Kita bakal memakai <code>ssh-agent</code> buat membantu mengelola SSH key dan passphrase tadi. Buka <strong>PowerShell sebagai Administrator</strong>, lalu jalankan:</p>
+<div class="code-example"><span class="code-language">powershell</span><pre tabindex="0" aria-label="Perintah powershell"><code>Get-Service -Name ssh-agent | Set-Service -StartupType Manual
+Start-Service ssh-agent</code></pre></div>
+<p>Setelah itu, buka PowerShell biasa (gak perlu Administrator lagi), lalu masukkan private key ke <code>ssh-agent</code>:</p>
+<div class="code-example"><span class="code-language">powershell</span><pre tabindex="0" aria-label="Perintah powershell"><code>ssh-add &quot;$HOME\.ssh\id_ed25519&quot;</code></pre></div>
+<p>Kalau kamu tadi membuat key dengan nama lain, sesuaikan nama file-nya. Jika diminta, masukkan passphrase yang tadi kamu buat. Kamu bisa cek key yang sudah dimuat menggunakan:</p>
+<div class="code-example"><span class="code-language">powershell</span><pre tabindex="0" aria-label="Perintah powershell"><code>ssh-add -l</code></pre></div>
+<h4>5. Tambahkan public key ke GitHub</h4>
+<p>Sekarang waktunya ngasih public key kita ke GitHub. Biar gak capek ngeblok teks yang panjang banget, kita bisa langsung menyalinnya ke clipboard:</p>
+<div class="code-example"><span class="code-language">powershell</span><pre tabindex="0" aria-label="Perintah powershell"><code>Get-Content &quot;$HOME\.ssh\id_ed25519.pub&quot; | Set-Clipboard</code></pre></div>
+<p>Lalu buka <a href="https://github.com/settings/keys">GitHub SSH Keys</a>, atau masuk ke <strong>Profile &gt; Settings &gt; SSH and GPG keys</strong>. Klik <strong>New SSH key</strong>, lalu:</p>
+<ol>
+<li>Isi <strong>Title</strong>, misalnya <code>Laptop Windows</code>.</li>
+<li>Pilih <strong>Key type: Authentication Key</strong>.</li>
+<li>Paste public key tadi ke kolom <strong>Key</strong>.</li>
+<li>Klik <strong>Add SSH key</strong>.</li>
+</ol>
+<p>Nah, sekarang GitHub sudah punya public key laptop kamu. Ingat, yang dimasukkan ke GitHub itu file yang berakhiran <code>.pub</code>, ya. Jangan kebalik.</p>
+<h4>6. Tes koneksi SSH ke GitHub</h4>
+<p>Balik lagi ke PowerShell, lalu ketik:</p>
+<div class="code-example"><span class="code-language">powershell</span><pre tabindex="0" aria-label="Perintah powershell"><code>ssh -T git@github.com</code></pre></div>
+<p>Saat pertama kali terhubung, SSH mungkin akan bertanya apakah kamu percaya dengan server GitHub. <strong>Cek fingerprint yang ditampilkan</strong> dan cocokkan dengan <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints">fingerprint resmi GitHub</a>. Kalau cocok, ketik <code>yes</code>.</p>
+<p>Kalau berhasil, kurang lebih muncul tulisan:</p>
+<div class="code-example"><span class="code-language">text</span><pre tabindex="0" aria-label="Perintah text"><code>Hi USERNAME! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</code></pre></div>
+<p>Tenang, tulisan <code>does not provide shell access</code> itu normal, bukan error. Justru itu tandanya GitHub sudah berhasil mengenali kamu. Yeay!</p>
+<p><strong>Catatan khusus Windows:</strong> Kalau nanti <code>git push</code> masih minta passphrase berkali-kali padahal key sudah masuk ke <code>ssh-agent</code>, bisa jadi Git for Windows memakai program SSH yang berbeda. Kamu bisa mengarahkan Git supaya memakai OpenSSH bawaan Windows:</p>
+<div class="code-example"><span class="code-language">powershell</span><pre tabindex="0" aria-label="Perintah powershell"><code>git config --global core.sshCommand &quot;C:/Windows/System32/OpenSSH/ssh.exe&quot;</code></pre></div>
+<h3 id="linux">Versi 2: Linux (Bash)</h3>
+<p>Oke, sekarang buat yang pakai Linux. Konsepnya sama aja dengan Windows, cuma perintah untuk mengelola file dan <code>ssh-agent</code> sedikit berbeda. <strong>Semua perintah di bawah ini untuk Bash</strong>, jadi pastikan kamu menjalankannya di terminal Bash.</p>
+<h4>1. Pastikan Git dan SSH sudah terpasang</h4>
+<p>Buka terminal, lalu jalankan:</p>
+<div class="code-example"><span class="code-language">bash</span><pre tabindex="0" aria-label="Perintah bash"><code>git --version
+ssh -V</code></pre></div>
+<p>Kalau muncul informasi versinya, berarti aman. Kalau salah satunya belum terpasang, install paket <code>git</code> dan <code>openssh-client</code> (atau nama paket OpenSSH yang sesuai dengan distribusi Linux kamu) melalui <em>package manager</em> masing-masing.</p>
+<h4>2. Cek SSH key yang sudah ada</h4>
+<p>Sekarang kita cek folder <code>.ssh</code>:</p>
+<div class="code-example"><span class="code-language">bash</span><pre tabindex="0" aria-label="Perintah bash"><code>ls -al ~/.ssh</code></pre></div>
+<p>Kalau muncul <code>No such file or directory</code>, berarti folder-nya belum ada. Gak masalah. Kalau kamu menemukan <code>id_ed25519</code> dan <code>id_ed25519.pub</code>, berarti sudah ada SSH key dan kamu bisa memutuskan mau memakainya atau membuat key lain.</p>
+<h4>3. Buat SSH key baru</h4>
+<p>Kalau belum punya, jalankan:</p>
+<div class="code-example"><span class="code-language">bash</span><pre tabindex="0" aria-label="Perintah bash"><code>ssh-keygen -t ed25519 -C &quot;email_kamu@example.com&quot;</code></pre></div>
+<p>Sama seperti Windows, ganti email contohnya dengan email kamu di GitHub. Setelah itu, tekan <strong>Enter</strong> untuk menyimpan key di lokasi default (biasanya <code>~/.ssh/id_ed25519</code>) kalau nama file tersebut belum dipakai.</p>
+<p>Kamu juga akan diminta membuat <strong>passphrase</strong>. Sebaiknya isi passphrase untuk keamanan tambahan. Terus, ingat dua file ini:</p>
+<ul>
+<li><code>~/.ssh/id_ed25519</code> -&gt; <strong>private key</strong>. Simpan baik-baik.</li>
+<li><code>~/.ssh/id_ed25519.pub</code> -&gt; <strong>public key</strong>. Ini yang boleh dikasih ke GitHub.</li>
+</ul>
+<p>Kalau nama file default sudah ada, <strong>jangan overwrite key lama</strong>. Pakai key yang sudah ada atau buat key baru dengan nama yang berbeda.</p>
+<h4>4. Jalankan ssh-agent</h4>
+<p>Sekarang kita jalankan <code>ssh-agent</code> di terminal Bash:</p>
+<div class="code-example"><span class="code-language">bash</span><pre tabindex="0" aria-label="Perintah bash"><code>eval &quot;$(ssh-agent -s)&quot;</code></pre></div>
+<p>Kalau berhasil, biasanya muncul tulisan seperti <code>Agent pid 12345</code>. Angkanya bisa beda-beda, jadi gak perlu disamain. Lalu tambahkan private key:</p>
+<div class="code-example"><span class="code-language">bash</span><pre tabindex="0" aria-label="Perintah bash"><code>ssh-add ~/.ssh/id_ed25519</code></pre></div>
+<p>Kalau diminta passphrase, masukkan passphrase yang tadi dibuat. Untuk cek apakah key sudah masuk, jalankan:</p>
+<div class="code-example"><span class="code-language">bash</span><pre tabindex="0" aria-label="Perintah bash"><code>ssh-add -l</code></pre></div>
+<p>Perlu diingat, perintah <code>eval</code> di atas menjalankan atau menghubungkan agent untuk sesi shell saat ini. Di beberapa lingkungan Linux, agent sudah berjalan otomatis; di lingkungan lain kamu mungkin perlu mengaturnya lagi saat membuka sesi baru.</p>
+<h4>5. Tambahkan public key ke GitHub</h4>
+<p>Sekarang kita tampilkan public key yang tadi dibuat:</p>
+<div class="code-example"><span class="code-language">bash</span><pre tabindex="0" aria-label="Perintah bash"><code>cat ~/.ssh/id_ed25519.pub</code></pre></div>
+<p>Copy <strong>seluruh output</strong> yang muncul, mulai dari <code>ssh-ed25519</code> sampai bagian akhirnya. Setelah itu, buka <a href="https://github.com/settings/keys">GitHub SSH Keys</a>, klik <strong>New SSH key</strong>, lalu:</p>
+<ol>
+<li>Isi <strong>Title</strong>, misalnya <code>Laptop Linux</code>.</li>
+<li>Pilih <strong>Key type: Authentication Key</strong>.</li>
+<li>Paste public key tadi ke kolom <strong>Key</strong>.</li>
+<li>Klik <strong>Add SSH key</strong>.</li>
+</ol>
+<p>Yup, bagian ini sama persis dengan Windows. Yang penting jangan sampai kamu malah meng-copy private key. File tanpa ekstensi <code>.pub</code> itu jangan dibagikan ke siapa-siapa.</p>
+<h4>6. Tes koneksi SSH ke GitHub</h4>
+<p>Terakhir, jalankan:</p>
+<div class="code-example"><span class="code-language">bash</span><pre tabindex="0" aria-label="Perintah bash"><code>ssh -T git@github.com</code></pre></div>
+<p>Kalau baru pertama kali menghubungkan laptop ke GitHub, kamu mungkin diminta memastikan fingerprint server. Cocokkan dulu dengan <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints">fingerprint resmi GitHub</a>. Kalau cocok, jawab <code>yes</code>.</p>
+<p>Kalau berhasil, output-nya kurang lebih seperti ini:</p>
+<div class="code-example"><span class="code-language">text</span><pre tabindex="0" aria-label="Perintah text"><code>Hi USERNAME! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</code></pre></div>
+<p>Dan... selesai! Laptop Linux kamu sekarang sudah bisa terhubung ke GitHub menggunakan SSH.</p>
+<h3 id="menggunakan-ssh">Terus, SSH-nya dipakai buat apa?</h3>
+<p>Nah, setelah koneksinya berhasil, sekarang kamu bisa memakai <strong>SSH URL</strong> saat mengambil repository dari GitHub. Misalnya kamu punya repository bernama <code>MyProject</code>, kamu bisa menjalankan perintah ini di <strong>PowerShell maupun Bash</strong>:</p>
+<div class="code-example"><span class="code-language">bash</span><pre tabindex="0" aria-label="Perintah bash"><code>git clone git@github.com:USERNAME/MyProject.git</code></pre></div>
+<p>Ganti <code>USERNAME</code> dengan username GitHub kamu, dan <code>MyProject</code> dengan nama repository yang memang ada dan bisa kamu akses.</p>
+<p>Kalau kamu sudah punya repository lokal yang sebelumnya menggunakan HTTPS, kamu juga bisa mengubah alamat remote-nya menjadi SSH. Masuk dulu ke folder repository-nya, lalu jalankan:</p>
+<div class="code-example"><span class="code-language">bash</span><pre tabindex="0" aria-label="Perintah bash"><code>git remote -v
+git remote set-url origin git@github.com:USERNAME/MyProject.git
+git remote -v</code></pre></div>
+<p>Perintah <code>git remote -v</code> pertama digunakan buat melihat alamat remote saat ini, sedangkan <code>git remote set-url</code> mengubah alamat remote <code>origin</code>. Perintah terakhir buat memastikan alamatnya sudah berubah. Perintah ini mengasumsikan repository kamu sudah punya remote bernama <code>origin</code>.</p>
+<p>Jadi nanti ketika kamu memakai <code>git pull</code> atau <code>git push</code>, Git bisa berkomunikasi dengan GitHub melalui SSH. Gak perlu bolak-balik login ke GitHub lewat terminal. Tapi kalau kamu memasang passphrase, SSH mungkin tetap akan meminta passphrase saat key belum dimuat oleh <code>ssh-agent</code>.</p>
+<h3 id="mengatasi-error">Kalau muncul error gimana?</h3>
+<p>Misalnya pas menjalankan <code>ssh -T git@github.com</code>, muncul tulisan <code>Permission denied (publickey)</code>. Biasanya ada beberapa hal yang perlu dicek: apakah public key yang benar sudah dimasukkan ke GitHub, apakah private key sudah dimuat oleh <code>ssh-agent</code>, dan apakah kamu memakai akun GitHub yang tepat.</p>
+<p>Coba cek daftar key yang dimuat dengan <code>ssh-add -l</code>. Kalau belum ada, tambahkan lagi private key menggunakan <code>ssh-add</code> sesuai versi OS di atas. Kalau koneksi SSH berhasil tapi <code>git push</code> tetap gagal, cek juga apakah kamu benar-benar punya izin menulis ke repository tersebut.</p>
+<p>Kalau ada peringatan fingerprint server yang gak cocok dengan informasi resmi GitHub, <strong>jangan langsung ketik <code>yes</code></strong>. Periksa koneksi dan penyebabnya dulu. Kita gak mau asal mempercayai server yang salah, kan?</p>
+<p>Buat bacaan tambahan kalau ada langkah yang terasa aneh atau error-nya belum selesai, kamu bisa cek dokumentasi resmi GitHub berikut:</p>
+<ul>
+<li><a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent">Generating a new SSH key and adding it to the ssh-agent</a></li>
+<li><a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">Adding a new SSH key to your GitHub account</a></li>
+<li><a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection">Testing your SSH connection</a></li>
+</ul>
+</section>
+<footer class="lesson-end"><a href="/materi/#program">← Semua topik Program</a><a href="#bab-0">Kembali ke bab 0 ↑</a><span>ELKAPRO / ATERKIA</span></footer>
+</article></div></main>
+<script type="module" src="/src/lesson.ts"></script>
+</body></html>

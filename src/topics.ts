@@ -3,7 +3,7 @@ export type Track = typeof tracks[number]['id'];
 export type Topic = { slug: string; track: Track; title: string; description: string; label: string };
 
 export const topics: readonly Topic[] = [
-  { slug: 'git-github', track: 'program', title: 'Git dan GitHub', description: 'Contoh materi pengenalan Git dan GitHub.', label: 'Materi dummy' },
+  { slug: 'git-github', track: 'program', title: 'Git dan GitHub', description: 'Pendahuluan Git dan koneksi GitHub menggunakan SSH di Windows dan Linux.', label: 'Bab 0–1' },
 ];
 
 export function selectTopics(items: readonly Topic[], track: Track, limit?: number) {
