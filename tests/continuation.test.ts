@@ -68,6 +68,8 @@ test('the same luminous cores deform along the filaments and become the code bra
   const cores = tunnel.children.filter(object => object instanceof THREE.Mesh && !(object instanceof THREE.InstancedMesh)) as THREE.Mesh[];
   assert.equal(cores.length, 20);
   const initialReferences = [...cores];
+  assert.ok(continuation.emitters.includes(lines));
+  assert.ok(cores.every(core => continuation.emitters.includes(core)), 'every morphing brace must remain an optical source');
   let previous: number[] | undefined;
   let midpoint: number[] | undefined;
   for (const progress of [.625, .66, .69, .715, .69, .66, .625]) {
@@ -81,6 +83,9 @@ test('the same luminous cores deform along the filaments and become the code bra
       const mesh = cores[index];
       assert.equal(mesh, initialReferences[index]);
       assert.equal((mesh.material as THREE.MeshStandardMaterial).opacity, 1);
+      const material = mesh.material as THREE.MeshStandardMaterial;
+      const emission = (.2126 * material.emissive.r + .7152 * material.emissive.g + .0722 * material.emissive.b) * material.emissiveIntensity;
+      assert.ok(emission > 1, `HDR emission must not disappear during the morph at ${progress}`);
       const lineIndex = Math.ceil(index * FILAMENT_COUNT / 20) * 224 + 112;
       const center = new THREE.Vector3().fromBufferAttribute(lines.geometry.attributes.position, lineIndex).lerp(new THREE.Vector3().fromBufferAttribute(lines.geometry.morphAttributes.position[0], lineIndex), m);
       const ring = new THREE.Vector3();

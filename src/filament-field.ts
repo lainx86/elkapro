@@ -58,10 +58,10 @@ export function createFilamentField() {
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
   geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
   geometry.morphAttributes.position = [new THREE.Float32BufferAttribute(destinations, 3)];
-  const fieldMaterial = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
+  const fieldMaterial = new THREE.LineBasicMaterial({ color: new THREE.Color().setRGB(3.5, 3.5, 3.5), vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
   const strandsMesh = new THREE.LineSegments(geometry, fieldMaterial);
   group.add(strandsMesh);
-  const pulseMaterial = new THREE.MeshBasicMaterial({ color: 0xe6f5ff, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
+  const pulseMaterial = new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(9, 12, 16), transparent: true, depthWrite: false });
   const pulses = new THREE.InstancedMesh(new THREE.SphereGeometry(.023, 6, 4), pulseMaterial, 36);
   group.add(pulses);
   const dummy = new THREE.Object3D();
@@ -69,6 +69,7 @@ export function createFilamentField() {
 
   return {
     group,
+    emitters: [strandsMesh, pulses],
     paths,
     codePaths,
     update(opacity: number, time: number, progress: number, reduced: boolean, assembly = 0) {

@@ -29,7 +29,7 @@ npm run preview
 
 - `src/main.ts`: HTML presentation, the single scroll timeline, motion preferences, and controls.
 - `src/world.ts`: the Three.js installation, camera paths, adaptive rendering, and cleanup.
-- `src/circuit-bloom.ts`: HDR selective bloom, surface occlusion, bounded optical buffers, and transparent compositing.
+- `src/selective-bloom.ts`: shared HDR bloom for the circuit, filaments, and code braces; surface occlusion, bounded optical buffers, and transparent compositing.
 - `src/continuation.ts`: filament field, code tunnel, network constellation, and the continuation camera path.
 - `src/filament-field.ts`: shared filament/brace curves, line morph targets, moving pulses, and SVG fallback deformation.
 - `src/journey.ts`: the deterministic progress-to-scene mapping.
@@ -41,6 +41,8 @@ npm run preview
 Use a WebGL2-capable browser. Check start, 17%, 32%, the old endpoint at 50%, filament field at 60%, code tunnel at 76%, network at 90%, and the new ending at desktop, tablet, 390px portrait, and landscape. Inspect the 62.5–71.5% join slowly in both directions: strands must bend and widen into braces, without fading, disappearing, or changing identity. Scroll quickly, reload midway, resize, and rotate the viewport. The original lightning and chip must disappear by 56%; the network must remain visible at the new ending. Test keyboard-only use, replay, and reduced motion. Disable WebGL to inspect the SVG curve morph. Background the tab to confirm rendering pauses.
 
 At the circuit, check for a fine luminous trace and a soft optical bloom, with travelling signals noticeably brighter. The glow must follow the visible source pixels, without rectangular bands, discs, or light leaking through the chip. Check camera movement, resize, and the adjacent story states. Automated tests verify selective rendering, occlusion materials, buffer limits, HDR fallback, and restoration after render errors. The bloom composite also passed standalone GLSL ES shader compilation/linking; this is not a substitute for visual WebGL QA.
+
+At the filament field and code tunnel, check the same blue-white bloom on strands, travelling signal points, and the curved brace cores. Glow must remain present throughout the 62.5–71.5% shape morph and reverse scroll; metallic braces should stay luminous when assembly is complete. The network finale must retain its original lighting. Tests verify that selected line sources survive the optical pass and that every brace retains HDR emission during the morph.
 
 The connected browser was unavailable during the initial implementation. TypeScript, production build, and timeline tests can run locally; visual device QA remains a separate check until browser access is available.
 

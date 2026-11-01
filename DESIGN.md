@@ -48,10 +48,12 @@ Reduced motion follows the OS setting until explicitly overridden with the “Ge
 
 The signal field uses 72 fine paths with vertex-color gradients, 20 luminous cores, and instanced travelling pulses. Cores have matching source/target tube topology, allowing both positions and normals to morph while the material changes from luminous blue-white to metal. The strands share a batched geometry; portrait framing rotates the field diagonally and then aligns it with the tunnel. No geometry is regenerated per frame.
 
-## Circuit illumination
+## Optical illumination
 
 Circuit traces and travelling pulses are HDR light sources. The pulses have smaller hot cores and roughly six times the trace luminance. Both are tone mapped in the main image, and visible emission feeds a selective UnrealBloomPass with five Gaussian blur scales. Brightness produces the optical spread; there are no halo ribbons, radial discs, or camera-facing particle planes.
 
-The sharp base image is drawn normally. A bounded-resolution half-float emission buffer renders the circuit lights with black surface occluders, so hidden lights do not shine through the chip. Only the blurred result is added over the base using an alpha-aware premultiplied composite. HTML typography and transparent canvas regions remain visible. Bloom is inactive outside the circuit choreography. Devices without half-float color support retain the tone-mapped sources; a failed optical pass restores rendering state and leaves the scene running.
+The same optical pass also receives the blue-white filament strands, their travelling signal points, and all 20 morphing code-brace cores. Strand gradients retain separate bright and dim layers. Pulse points have the same high radiance as the circuit signals. Brace emission stays above HDR white throughout assembly and continues after the material becomes metallic, so the glow follows the uninterrupted shape transformation. One shared pass handles all these sources; the network constellation is excluded.
+
+The sharp base image is drawn normally. A bounded-resolution half-float emission buffer renders the selected sources with black surface occluders, so hidden lights do not shine through solid geometry. Only the blurred result is added over the base using an alpha-aware premultiplied composite. HTML typography and transparent canvas regions remain visible. Bloom follows the circuit, filament, and tunnel choreography and is inactive at the final network composition. Devices without half-float color support retain the tone-mapped sources; a failed optical pass restores rendering state and leaves the scene running.
 
 No generated images, third-party media requests, audio, analytics, backend, or telemetry. Repeated geometry uses instancing or merged buffers; pixel ratio and mobile particle counts are capped. Rendering pauses while the document is hidden.

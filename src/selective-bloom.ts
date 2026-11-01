@@ -2,14 +2,14 @@ import * as THREE from 'three';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
 
-/** Bloom comes from visible HDR circuit pixels, not a halo mesh or a particle billboard. */
-export function createCircuitBloom(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera, emitters: THREE.Object3D[]) {
+/** Shared optical bloom for the visible HDR sources across the continuous installation. */
+export function createSelectiveBloom(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera, emitters: THREE.Object3D[]) {
   const supported = renderer.extensions.has('EXT_color_buffer_float');
   const source = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType });
-  source.texture.name = 'circuit-emission';
+  source.texture.name = 'selected-emission';
   const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), .55, .32, .8);
   const overlayMaterial = new THREE.ShaderMaterial({
-    name: 'CircuitBloomComposite',
+    name: 'SelectiveBloomComposite',
     uniforms: { bloomTexture: { value: bloom.renderTargetsHorizontal[0].texture } },
     vertexShader: `
       varying vec2 vUv;

@@ -3,7 +3,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { journeyState, smoothRange } from './journey';
 import { createContinuation } from './continuation';
-import { createCircuitBloom } from './circuit-bloom';
+import { createSelectiveBloom } from './selective-bloom';
 
 const BLUE = 0x0050b8;
 const ICE = 0x78c8ff;
@@ -145,7 +145,6 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
   const pulses = new THREE.InstancedMesh(new THREE.SphereGeometry(.022, 10, 6), pulseMaterial, routes.length);
   circuit.add(pulses);
   root.add(circuit);
-  const circuitBloom = createCircuitBloom(renderer, scene, camera, [traces, pulses]);
 
   const diamonds = new THREE.Group();
   const diamondMaterial = new THREE.LineBasicMaterial({ color: 0x63abef, transparent: true, opacity: .6 });
@@ -193,6 +192,7 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
   ], false, 'catmullrom', .35);
   const cameraTarget = new THREE.Vector3();
   const continuation = createContinuation(scene);
+  const bloom = createSelectiveBloom(renderer, scene, camera, [traces, pulses, ...continuation.emitters]);
   let portrait = false;
   let width = 1;
   let height = 1;
@@ -214,7 +214,7 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     portrait = width / height < .85;
     renderer.setPixelRatio(Math.min(devicePixelRatio, width < 700 ? 1.5 : 1.75));
     renderer.setSize(width, height, false);
-    circuitBloom.resize(width, height, renderer.getPixelRatio());
+    bloom.resize(width, height, renderer.getPixelRatio());
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     render();
@@ -285,8 +285,8 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
     continuation.update(s, animated, portrait, minimal, camera, cameraTarget);
     renderer.render(scene, camera);
     if (bloomAvailable) {
-      try { circuitBloom.render(c * (1 - r * .7) * (1 - s.departure)); }
-      catch (error) { bloomAvailable = false; console.warn('Circuit bloom unavailable; keeping the light sources visible.', error); }
+      try { bloom.render(Math.max(c * (1 - r * .7) * (1 - s.departure), s.wave)); }
+      catch (error) { bloomAvailable = false; console.warn('Bloom unavailable; keeping the light sources visible.', error); }
     }
   }
 
@@ -361,7 +361,7 @@ export function createWorld(canvas: HTMLCanvasElement, onFailure: () => void) {
       geometries.forEach(g => g.dispose());
       materials.forEach(m => m.dispose());
       environment.dispose();
-      circuitBloom.dispose();
+      bloom.dispose();
       renderer.dispose();
     },
   };

@@ -86,6 +86,7 @@ export function createContinuation(scene: THREE.Scene) {
   const lookTarget = new THREE.Vector3();
 
   return {
+    emitters: [...field.emitters, ...gates],
     update(s: JourneyState, time: number, portrait: boolean, reduced: boolean, camera: THREE.PerspectiveCamera, originalTarget: THREE.Vector3) {
       const t = reduced ? 0 : time;
       const assembly = s.assembly;
@@ -106,8 +107,8 @@ export function createContinuation(scene: THREE.Scene) {
       gateBlue.color.set(0xb9e7ff).lerp(finishedBlue, assembly);
       for (const material of [gateSilver, gateBlue]) {
         material.metalness = assembly * .92;
-        material.emissive.set(0x78c8ff);
-        material.emissiveIntensity = (1 - assembly) * .9;
+        material.emissive.setRGB(.7, 2.2, 4);
+        material.emissiveIntensity = THREE.MathUtils.lerp(.9, .65, assembly);
       }
       gates.forEach(gate => { gate.morphTargetInfluences![0] = assembly; });
       const bitGrowth = smoothRange(.72, .76, s.progress);
