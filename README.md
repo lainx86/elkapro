@@ -1,4 +1,4 @@
-# ELKAPRO — Arus Menjadi Logika
+# ELKAPRO — Rayakan Perih, Rayakan Letih, Rayaka Juara!
 
 A continuous-scroll 3D art website for Aterkia's Electrical & Programming division. Built with Vite, TypeScript, Three.js, and GSAP ScrollTrigger. All artwork is procedural geometry or SVG; the original supplied Aterkia logo is included unchanged.
 

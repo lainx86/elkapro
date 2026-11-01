@@ -1,4 +1,4 @@
-# ELKAPRO — Arus Menjadi Logika
+# ELKAPRO — Rayakan Perih, Rayakan Letih, Rayaka Juara!
 
 An interactive art installation for the Electrical & Programming division of Aterkia Diponegoro Team. The subject is electricity and computation. The original Aterkia logo is the only nautical image.
 
@@ -28,10 +28,10 @@ A single GSAP timeline maps document scroll to progress 0–1. `journeyState()` 
 
 | Progress | Visual direction | Copy |
 | --- | --- | --- |
-| 0–0.22 | A chrome lightning sculpture intersecting orbital conductors | ELKAPRO / Arus menjadi logika |
+| 0–0.22 | A chrome lightning sculpture intersecting orbital conductors | ELKAPRO / Rayakan Perih, Rayakan Letih, Rayaka Juara! |
 | 0.19–0.49 | The sculpture contracts toward a chip while circuit routes expand | Mengalir. Terhubung. |
 | 0.48–0.81 | Ordered points and HTML code fragments emerge around the processor | Logika yang menggerakkan. |
-| 0.83–1 | The field resolves into nested diamond outlines with the original logo and replay | Arus menjadi logika. |
+| 0.83–1 | The field resolves into nested diamond outlines with the original logo and replay | Rayakan Perih, Rayakan Letih, Rayaka Juara! |
 
 Desktop scroll height is 800svh; mobile is 650svh. The complete journey maps directly to progress 0–1, and the progress indicator reaches 100 at the logo/replay ending. Portrait framing uses a separate camera path. Text is never simultaneously readable at full strength.
 

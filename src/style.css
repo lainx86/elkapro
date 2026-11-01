@@ -60,7 +60,7 @@ h2 span { color: #84a4c9; }
 .code-stream { font: 11px/2 var(--mono); color: #78c8ff; position: absolute; left: 10%; top: 64%; z-index: 4; opacity: 0; visibility: hidden; transform: rotate(-5deg); }
 .code-stream span { display: block; }
 .outro { position: absolute; z-index: 4; left: 10%; top: 25%; opacity: 0; visibility: hidden; }
-.outro h2 { font-size: clamp(56px, 7.8vw, 150px); }
+.outro h2 { font-size: clamp(40px, 5.4vw, 104px); }
 .outro-lockup { display: flex; align-items: center; gap: 15px; margin-top: 30px; }
 .outro-lockup img { object-fit: contain; }
 .outro-lockup p { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .1em; }
@@ -119,7 +119,7 @@ body:has(.noscript-message) .journey { height: 100svh; }
   .small-copy { font-size: 12px; margin-top: 20px; }
   .code-stream { left: var(--edge); top: auto; bottom: 21%; font-size: 8px; }
   .outro { left: var(--edge); top: 18%; }
-  .outro h2 { font-size: 13vw; }
+  .outro h2 { font-size: 10vw; }
   .outro-lockup { margin-top: 22px; gap: 12px; }
   .outro-lockup img { width: 36px; height: 48px; }
   .outro-lockup p { font-size: 12px; }
